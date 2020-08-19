@@ -6,18 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class RecipeCategory extends Model
 {
-    protected $fillable = [
-    	'name'
-    ];
-
     public $timestamps = false;
 
     protected $table = 'recipe_category';
 
-    public static function form()
+    public function recipes()
     {
-    	return [
-    		'name' => ''
-    	];
+       return $this->hasMany(Recipe::class);
     }
 }

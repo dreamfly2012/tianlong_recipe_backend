@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Recipe extends Model
 {
     protected $fillable = [
-    	'name', 'description', 'image'
+    	'name', 'description', 'image', 'category_id'
     ];
 
     public function user()
@@ -30,6 +30,7 @@ class Recipe extends Model
         return [
             'name' => '',
             'image' => '',
+            'category_id' => '',
             'description' => '',
             'ingredients' => [
                 RecipeIngredient::form()

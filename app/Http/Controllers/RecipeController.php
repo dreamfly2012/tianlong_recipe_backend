@@ -20,22 +20,41 @@ class RecipeController extends Controller
     		->except(['index', 'show', 'lists', 'info', 'category']);
     }
 
-    public function lists()
+    public function lists(Request $request)
     {
-        Redis::setex('recipes', 600, '');
-        $cacheRecipes = Redis::get('recipes');
-        if($cacheRecipes) {
-            return $cacheRecipes;
-        } else {
-            $recipes = Recipe::select()->orderBy('id' , 'desc')->paginate();
-            foreach ($recipes as $k => $v) {
-                $cdn = getenv('COSV5_CDN');
+        $category_id = $request->get('category_id',  0);
 
-                $recipes[$k]['image_src'] = $cdn .$v['image'];
+        if(empty($category_id)){
+            $cacheRecipes = Redis::get('recipes');
+            if ($cacheRecipes) {
+                return $cacheRecipes;
+            } else {
+                $recipes = Recipe::select()->orderBy('id', 'desc')->paginate();
+                foreach ($recipes as $k => $v) {
+                    $cdn = getenv('COSV5_CDN');
+
+                    $recipes[$k]['image_src'] = $cdn . $v['image'];
+                }
+                Redis::setex('recipes', 600, $recipes);
+                return $recipes;
             }
-            Redis::setex('recipes', 600, $recipes);
-            return $recipes;
+        }else{
+            $cache_key = 'recipes:' . $category_id;
+            $cacheRecipes = Redis::get($cache_key);
+            if ($cacheRecipes) {
+                return $cacheRecipes;
+            } else {
+                $recipes = Recipe::where('category_id', $category_id)->orderBy('id', 'desc')->paginate();
+                foreach ($recipes as $k => $v) {
+                    $cdn = getenv('COSV5_CDN');
+
+                    $recipes[$k]['image_src'] = $cdn . $v['image'];
+                }
+                Redis::setex($cache_key, 600, $recipes);
+                return $recipes;
+            }
         }
+        
     }
 
 
@@ -48,13 +67,15 @@ class RecipeController extends Controller
         if($cacheCategories){
             return ['msg'=>'分类信息', 'data'=>$cacheCategories,'code'=>0];
         }else{
-            $categories = RecipeCategory::where('parent_id', $parent_id)->orderBy('category_id','desc')->get();
+            $categories = RecipeCategory::where('parent_id', $parent_id)->orderBy('category_id','asc')->get();
 
             Redis::setex('cacheCategories', 600, $categories);
 
             return ['msg' => '分类信息','code'=>0, 'data' => $categories];
         }
     }
+
+
 
     public function info(Request $request)
     {
@@ -69,9 +90,6 @@ class RecipeController extends Controller
             if(empty($recipe)){
                 return [];
             }
-        
-            $http_type = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
-            
             $cdn = getenv('COSV5_CDN');
 
             $recipe['image_src'] = $cdn .$recipe['image'];
@@ -141,10 +159,10 @@ class RecipeController extends Controller
     	
     	$request->image->move(base_path('public/images'), $filename);
 
-    	$recipe = new Recipe($request->only('name', 'description'));
-    	$recipe->image = $filename;
-
-    	$request->user()->recipes()
+    	$recipe = new Recipe($request->only('name', 'description','category_id'));
+        $recipe->image = $filename;
+        
+        $request->user()->recipes()
     		->save($recipe);
 
     	$recipe->ingredients()

@@ -17,7 +17,7 @@ class RecipeController extends Controller
     public function __construct()
     {
     	$this->middleware('auth:api')
-    		->except(['index', 'show', 'lists', 'info', 'category']);
+    		->except(['index', 'show', 'lists', 'info', 'category', 'search']);
     }
 
     public function lists(Request $request)
@@ -26,35 +26,53 @@ class RecipeController extends Controller
 
         if(empty($category_id)){
             $cacheRecipes = Redis::get('recipes');
+           
             if ($cacheRecipes) {
+                $cacheRecipes = unserialize($cacheRecipes);
                 return $cacheRecipes;
             } else {
-                $recipes = Recipe::select()->orderBy('id', 'desc')->paginate();
+                $recipes = Recipe::orderBy('id', 'desc')->paginate();
+                
                 foreach ($recipes as $k => $v) {
                     $cdn = getenv('COSV5_CDN');
-
                     $recipes[$k]['image_src'] = $cdn . $v['image'];
                 }
-                Redis::setex('recipes', 600, $recipes);
+                $s_recipes = serialize($recipes);
+                Redis::setex('recipes', 600, $s_recipes);
+                $cacheRecipes = Redis::get('recipes');
                 return $recipes;
             }
         }else{
             $cache_key = 'recipes:' . $category_id;
             $cacheRecipes = Redis::get($cache_key);
             if ($cacheRecipes) {
+                $cacheRecipes = unserialize($cacheRecipes);
                 return $cacheRecipes;
             } else {
                 $recipes = Recipe::where('category_id', $category_id)->orderBy('id', 'desc')->paginate();
                 foreach ($recipes as $k => $v) {
                     $cdn = getenv('COSV5_CDN');
-
                     $recipes[$k]['image_src'] = $cdn . $v['image'];
                 }
-                Redis::setex($cache_key, 600, $recipes);
+                $s_recipes = serialize($recipes);
+                Redis::setex($cache_key, 600, $s_recipes);
                 return $recipes;
             }
         }
         
+    }
+
+
+    public function search(Request $request)
+    {
+        $name = $request->get('name');
+        
+        $recipes = Recipe::where('name','like', '%' . $name . '%')->orderby('id', 'desc')->paginate(15);
+        foreach ($recipes as $k => $v) {
+            $cdn = getenv('COSV5_CDN');
+            $recipes[$k]['image_src'] = $cdn . $v['image'];
+        }
+        return $recipes;
     }
 
 
@@ -198,6 +216,7 @@ class RecipeController extends Controller
 
     public function edit($id, Request $request)
     {
+        $categories = RecipeCategory::where('parent_id', 0)->get();
         $form = $request->user()->recipes()
             ->with(['ingredients' => function($query) {
                 $query->get(['id', 'name', 'qty']);
@@ -210,7 +229,8 @@ class RecipeController extends Controller
 
         return response()
             ->json([
-                'form' => $form
+                'form' => $form,
+            'cateories' => $categories,
             ]);
     }
 
@@ -266,6 +286,8 @@ class RecipeController extends Controller
 
         $recipe->name = $request->name;
         $recipe->description = $request->description;
+        $recipe->category_id = $request->category_id;
+        
 
         // upload image
         if ($request->hasfile('image') && $request->file('image')->isValid()) {
@@ -273,6 +295,8 @@ class RecipeController extends Controller
             $request->image->move(base_path('/public/images'), $filename);
 
             // remove old image
+            $FilePath = $request->image->getRealPath(); //获取文件临时存放位置
+            Storage::disk('cosv5')->put($filename, file_get_contents($FilePath)); //存储文件
             File::delete(base_path('/public/images/'.$recipe->image));
             $recipe->image = $filename;
         }

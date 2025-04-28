@@ -109,20 +109,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Logging Configuration
+    | Package Auto-Discovery
     |--------------------------------------------------------------------------
     |
-    | Here you may configure the log settings for your application. Out of
-    | the box, Laravel uses the Monolog PHP logging library. This gives
-    | you a variety of powerful log handlers / formatters to utilize.
-    |
-    | Available Settings: "single", "daily", "syslog", "errorlog"
+    | By default, Laravel automatically discovers packages that are registered
+    | through the Laravel service provider. You may disable this functionality
+    | by setting this option to false. You can then manually register them.
     |
     */
 
-    'log' => env('APP_LOG', 'single'),
-
-    'log_level' => env('APP_LOG_LEVEL', 'debug'),
+    'package_auto_discovery' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -162,11 +158,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
-        /*
-         * Package Service Providers...
-         */
-        Laravel\Tinker\TinkerServiceProvider::class,
 
         /*
          * Application Service Providers...

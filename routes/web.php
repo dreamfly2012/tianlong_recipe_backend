@@ -1,6 +1,8 @@
 <?php
 
-Route::get('test','TestController@index');
+use App\Http\Controllers\TestController;
+
+Route::get('test', [TestController::class, 'index']);
 
 Route::get('/{any}', function () {
     return view('welcome');

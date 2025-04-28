@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
-use App\RecipeIngredient;
-use App\RecipeDirection;
-use App\Recipe;
-use App\User;
-use App\RecipeCategory;
+use App\Models\RecipeIngredient;
+use App\Models\RecipeDirection;
+use App\Models\Recipe;
+use App\Models\User;
+use App\Models\RecipeCategory;
 use File;
 
 class RecipeController extends Controller

@@ -1,10 +1,8 @@
-# Single Page Application with Laravel 5.4 and Vue.js 2 - Recipe Box
+# Single Page Application with Laravel 12  - Recipe Box
 
 ### Frameworks and Libraries:
 
-- Laravel 5.4
-- Vue.js 2.2
-- Vue Router
+- Laravel 12
 - Axios
 
 ### Provides:
@@ -15,17 +13,16 @@
 - CRUD
 
 
-![alt tag](https://github.com/codekerala/laravel-and-vue.js-spa-Recipe-Box/raw/master/s1.png)
-
 ### Installation
-`git clone https://github.com/codekerala/laravel-and-vue.js-spa-Recipe-Box.git`
 
-`laravel-and-vue.js-spa-Recipe-Box`
+
+`php artisan key:generate`
 
 `composer install`
 
 `npm install`
 
-### On Youtube
+`npm run dev`
 
-Development: https://youtu.be/LZcwmzTdcLE
+
+

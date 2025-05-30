@@ -1,6 +1,7 @@
 /.phpunit.cache
 /bootstrap/ssr
 /node_modules
+/.yarn
 /public/build
 /public/hot
 /public/storage
@@ -15,7 +16,11 @@
 Homestead.json
 Homestead.yaml
 npm-debug.log
+yarn-debug.log
 yarn-error.log
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 /auth.json
 /.fleet
 /.idea

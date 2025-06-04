@@ -1,92 +1,20 @@
-import { onMounted, ref } from 'vue';
+import { computed } from 'vue';
+import { useThemeStore } from '../stores/theme';
 
-type Appearance = 'light' | 'dark' | 'system';
-
-export function updateTheme(value: Appearance) {
-    if (typeof window === 'undefined') {
-        return;
-    }
-
-    if (value === 'system') {
-        const mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
-        const systemTheme = mediaQueryList.matches ? 'dark' : 'light';
-
-        document.documentElement.classList.toggle('dark', systemTheme === 'dark');
-    } else {
-        document.documentElement.classList.toggle('dark', value === 'dark');
-    }
-}
-
-const setCookie = (name: string, value: string, days = 365) => {
-    if (typeof document === 'undefined') {
-        return;
-    }
-
-    const maxAge = days * 24 * 60 * 60;
-
-    document.cookie = `${name}=${value};path=/;max-age=${maxAge};SameSite=Lax`;
-};
-
-const mediaQuery = () => {
-    if (typeof window === 'undefined') {
-        return null;
-    }
-
-    return window.matchMedia('(prefers-color-scheme: dark)');
-};
-
-const getStoredAppearance = () => {
-    if (typeof window === 'undefined') {
-        return null;
-    }
-
-    return localStorage.getItem('appearance') as Appearance | null;
-};
-
-const handleSystemThemeChange = () => {
-    const currentAppearance = getStoredAppearance();
-
-    updateTheme(currentAppearance || 'system');
-};
+export type Theme = 'light' | 'dark' | 'system';
 
 export function initializeTheme() {
-    if (typeof window === 'undefined') {
-        return;
-    }
-
-    // Initialize theme from saved preference or default to system...
-    const savedAppearance = getStoredAppearance();
-    updateTheme(savedAppearance || 'system');
-
-    // Set up system theme change listener...
-    mediaQuery()?.addEventListener('change', handleSystemThemeChange);
+    const themeStore = useThemeStore();
+    themeStore.init();
 }
 
 export function useAppearance() {
-    const appearance = ref<Appearance>('system');
-
-    onMounted(() => {
-        const savedAppearance = localStorage.getItem('appearance') as Appearance | null;
-
-        if (savedAppearance) {
-            appearance.value = savedAppearance;
-        }
-    });
-
-    function updateAppearance(value: Appearance) {
-        appearance.value = value;
-
-        // Store in localStorage for client-side persistence...
-        localStorage.setItem('appearance', value);
-
-        // Store in cookie for SSR...
-        setCookie('appearance', value);
-
-        updateTheme(value);
-    }
+    const themeStore = useThemeStore();
 
     return {
-        appearance,
-        updateAppearance,
+        appearance: computed(() => themeStore.theme),
+        currentTheme: computed(() => themeStore.currentTheme),
+        isDark: computed(() => themeStore.isDark),
+        updateAppearance: (value: Theme) => themeStore.setTheme(value),
     };
 }

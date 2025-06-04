@@ -6,12 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class RecipeCategory extends Model
 {
-    public $timestamps = false;
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'recipe_categories';
 
-    protected $table = 'recipe_category';
-
-    public function recipes()
-    {
-       return $this->hasMany(Recipe::class);
-    }
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+    ];
 }

@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use Faker\Factory;
 use App\Recipe;
@@ -24,6 +26,7 @@ class RecipesTableSeeder extends Seeder
         foreach(range(1, 10) as $i) {
         	$recipe = Recipe::create([
         		'user_id' => $i,
+				'category_id' => mt_rand(1, 8),
         		'name' => $faker->sentence,
         		'description' => $faker->paragraph(mt_rand(10, 20)),
         		'image' => 'test.png'

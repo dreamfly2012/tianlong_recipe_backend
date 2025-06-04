@@ -1,5 +1,8 @@
 <?php
 
+namespace Database\Seeders;
+
+
 use Illuminate\Database\Seeder;
 use Faker\Factory;
 use App\User;
@@ -22,7 +25,6 @@ class UsersTableSeeder extends Seeder
         		'name' => $faker->name,
         		'email' => $faker->email,
         		'password' => bcrypt('password'),
-        		'api_token' => str_random(60)
         	]);
         }
     }

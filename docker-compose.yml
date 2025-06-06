@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # Nginx 服务
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./src:/var/www/html
+      - ./nginx/logs:/var/log/nginx
+    depends_on:
+      - php
+    networks:
+      - app-network
+
+  # PHP 8.4 服务（带 mbstring 和 redis 扩展）
+  php:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    container_name: php
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - app-network
+
+  # Node.js 20 服务
+  node:
+    image: node:20
+    container_name: node
+    working_dir: /app
+    volumes:
+      - ./src:/app
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+  # MySQL 服务
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
+  # Redis 服务
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+# 网络定义
+networks:
+  app-network:
+    driver: bridge
+
+# 卷定义
+volumes:
+  mysql_data:

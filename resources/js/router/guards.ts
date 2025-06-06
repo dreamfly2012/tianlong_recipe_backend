@@ -31,7 +31,7 @@ export async function authGuard(
 
         // 如果是游客页面且用户已登录，重定向到首页
         if (to.meta.guest && authStore.isAuthenticated) {
-            next({ name: 'home' });
+            next({ name: 'dashboard' });
             return;
         }
 

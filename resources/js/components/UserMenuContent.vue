@@ -2,15 +2,34 @@
 import UserInfo from '@/components/UserInfo.vue';
 import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import type { User } from '@/types';
-import { Link, router } from '@inertiajs/vue3';
 import { LogOut, Settings } from 'lucide-vue-next';
+import { useRouter } from 'vue-router';
 
 interface Props {
     user: User;
 }
 
-const handleLogout = () => {
-    router.flushAll();
+const router = useRouter();
+
+const handleLogout = async () => {
+    try {
+        // 假设你有一个 API 端点来处理登出
+        await fetch('/api/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
+        // 登出成功后重定向到登录页面
+        router.push('/login');
+    } catch (error) {
+        console.error('Logout failed:', error);
+    }
+};
+
+const navigateToSettings = () => {
+    router.push('/profile/edit');
 };
 
 defineProps<Props>();
@@ -25,17 +44,17 @@ defineProps<Props>();
     <DropdownMenuSeparator />
     <DropdownMenuGroup>
         <DropdownMenuItem :as-child="true">
-            <Link class="block w-full" :href="route('profile.edit')" prefetch as="button">
+            <button class="block w-full" @click="navigateToSettings">
                 <Settings class="mr-2 h-4 w-4" />
                 Settings
-            </Link>
+            </button>
         </DropdownMenuItem>
     </DropdownMenuGroup>
     <DropdownMenuSeparator />
     <DropdownMenuItem :as-child="true">
-        <Link class="block w-full" method="post" :href="route('logout')" @click="handleLogout" as="button">
+        <button class="block w-full" @click="handleLogout">
             <LogOut class="mr-2 h-4 w-4" />
             Log out
-        </Link>
+        </button>
     </DropdownMenuItem>
 </template>

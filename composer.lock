@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6f8880c017d3fd0bd1f7705aadd43b7c",
+    "content-hash": "d79ed1922f8605e1c77cb1168a2443ed",
     "packages": [
         {
             "name": "brick/math",
@@ -1315,67 +1315,6 @@
                 }
             ],
             "time": "2025-02-03T10:55:03+00:00"
-        },
-        {
-            "name": "inertiajs/inertia-laravel",
-            "version": "v0.2.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/inertiajs/inertia-laravel.git",
-                "reference": "ef618736fb566e5c85d862fa0cf6061422f19046"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/inertiajs/inertia-laravel/zipball/ef618736fb566e5c85d862fa0cf6061422f19046",
-                "reference": "ef618736fb566e5c85d862fa0cf6061422f19046",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require-dev": {
-                "orchestra/testbench": "~3.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Inertia\\ServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "files": [
-                    "./helpers.php"
-                ],
-                "psr-4": {
-                    "Inertia\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jonathan Reinink",
-                    "email": "jonathan@reinink.ca",
-                    "homepage": "https://reinink.ca"
-                }
-            ],
-            "description": "The Laravel adapter for Inertia.js.",
-            "keywords": [
-                "inertia",
-                "laravel"
-            ],
-            "support": {
-                "issues": "https://github.com/inertiajs/inertia-laravel/issues",
-                "source": "https://github.com/inertiajs/inertia-laravel/tree/master"
-            },
-            "time": "2020-02-28T14:50:19+00:00"
         },
         {
             "name": "laravel/framework",
@@ -2691,12 +2630,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "ce708655043c7050eb050df361c5e313cf708309"
+                "reference": "2d3e496c5cb2a7189e3f746c644fceb4f5f88add"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/ce708655043c7050eb050df361c5e313cf708309",
-                "reference": "ce708655043c7050eb050df361c5e313cf708309",
+                "url": "https://api.github.com/repos/nette/utils/zipball/2d3e496c5cb2a7189e3f746c644fceb4f5f88add",
+                "reference": "2d3e496c5cb2a7189e3f746c644fceb4f5f88add",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -2774,9 +2713,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/utils/issues",
-                "source": "https://github.com/nette/utils/tree/v4.0.6"
+                "source": "https://github.com/nette/utils/tree/master"
             },
-            "time": "2025-03-30T21:06:30+00:00"
+            "time": "2025-04-05T17:09:45+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -8718,82 +8657,6 @@
                 }
             ],
             "time": "2024-03-03T12:36:25+00:00"
-        },
-        {
-            "name": "tightenco/ziggy",
-            "version": "v2.5.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tighten/ziggy.git",
-                "reference": "40df446f6053787edb245381c3b3d80b031b5fc0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tighten/ziggy/zipball/40df446f6053787edb245381c3b3d80b031b5fc0",
-                "reference": "40df446f6053787edb245381c3b3d80b031b5fc0",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require": {
-                "ext-json": "*",
-                "laravel/framework": ">=9.0",
-                "php": ">=8.1"
-            },
-            "require-dev": {
-                "laravel/folio": "^1.1",
-                "orchestra/testbench": "^7.0 || ^8.0 || ^9.0",
-                "pestphp/pest": "^2.26",
-                "pestphp/pest-plugin-laravel": "^2.4"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Tighten\\Ziggy\\ZiggyServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Tighten\\Ziggy\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Daniel Coulbourne",
-                    "email": "daniel@tighten.co"
-                },
-                {
-                    "name": "Jake Bathman",
-                    "email": "jake@tighten.co"
-                },
-                {
-                    "name": "Jacob Baker-Kretzmar",
-                    "email": "jacob@tighten.co"
-                }
-            ],
-            "description": "Use your Laravel named routes in JavaScript.",
-            "homepage": "https://github.com/tighten/ziggy",
-            "keywords": [
-                "Ziggy",
-                "javascript",
-                "laravel",
-                "routes"
-            ],
-            "support": {
-                "issues": "https://github.com/tighten/ziggy/issues",
-                "source": "https://github.com/tighten/ziggy/tree/v2.5.1"
-            },
-            "time": "2025-01-31T19:23:01+00:00"
         }
     ],
     "aliases": [],

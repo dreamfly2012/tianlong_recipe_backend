@@ -63,9 +63,10 @@ class Handler extends ExceptionHandler
     protected function unauthenticated($request, \Illuminate\Auth\AuthenticationException $exception)
     {
         if ($request->expectsJson()) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
+            return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 
+        // 如果是网页请求，才跳转到 login
         return redirect()->guest(route('login'));
     }
 }

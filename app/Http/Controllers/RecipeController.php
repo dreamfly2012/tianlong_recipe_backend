@@ -4,25 +4,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\RecipeIngredient;
 use App\Models\RecipeDirection;
 use App\Models\Recipe;
-use App\Models\User;
 use App\Models\RecipeCategory;
-use File;
+use App\Http\Helpers\ApiResponse;
+
 
 class RecipeController extends Controller
 {
     public function __construct()
     {
-    	$this->middleware('auth:api')
-    		->except(['index', 'show', 'lists', 'info', 'category', 'search']);
+        $this->middleware('auth:api')
+            ->except(['index', 'show', 'lists', 'info', 'category', 'search']);
     }
 
     public function lists(Request $request)
     {
-        $category_id = $request->get('category_id',  0);
+        $category_id = $request->get('id',  0);
 
         if(empty($category_id)){
             $cacheRecipes = Redis::get('recipes');
@@ -34,7 +37,7 @@ class RecipeController extends Controller
                 $recipes = Recipe::orderBy('id', 'desc')->paginate();
                 
                 foreach ($recipes as $k => $v) {
-                    $cdn = getenv('COSV5_CDN');
+                    $cdn = getenv('COS_CDN');
                     $recipes[$k]['image_src'] = $cdn . $v['image'];
                 }
                 $s_recipes = serialize($recipes);
@@ -51,7 +54,7 @@ class RecipeController extends Controller
             } else {
                 $recipes = Recipe::where('category_id', $category_id)->orderBy('id', 'desc')->paginate();
                 foreach ($recipes as $k => $v) {
-                    $cdn = getenv('COSV5_CDN');
+                    $cdn = getenv('COS_CDN');
                     $recipes[$k]['image_src'] = $cdn . $v['image'];
                 }
                 $s_recipes = serialize($recipes);
@@ -62,6 +65,41 @@ class RecipeController extends Controller
         
     }
 
+    //用户收藏列表
+    public function favourites(Request $request)
+    {
+        $user = $request->user();
+        dump($user);
+        $recipes = $user->recipes()->orderBy('id', 'desc')->paginate(15);
+        foreach ($recipes as $k => $v) {
+            $cdn = getenv('COS_CDN');
+            $recipes[$k]['image_src'] = $cdn . $v['image'];
+        }
+        return $recipes;
+    }
+
+    //每日推荐
+    public function daily(Request $request)
+    {
+        $recipes = Recipe::orderBy('id', 'desc')->paginate(15);
+        foreach ($recipes as $k => $v) {
+            $cdn = getenv('COS_CDN');
+            $recipes[$k]['image_src'] = $cdn . $v['image'];
+        }
+        return $recipes;
+    }
+
+    //根据ai生成食谱
+    public function ai(Request $request)
+    {
+        $recipes = Recipe::orderBy('id', 'desc')->paginate(15);
+        foreach ($recipes as $k => $v) {
+            $cdn = getenv('COS_CDN');
+            $recipes[$k]['image_src'] = $cdn . $v['image'];
+        }
+        return $recipes;
+    }
+
 
     public function search(Request $request)
     {
@@ -69,7 +107,7 @@ class RecipeController extends Controller
         
         $recipes = Recipe::where('name','like', '%' . $name . '%')->orderby('id', 'desc')->paginate(15);
         foreach ($recipes as $k => $v) {
-            $cdn = getenv('COSV5_CDN');
+            $cdn = getenv('COS_CDN');
             $recipes[$k]['image_src'] = $cdn . $v['image'];
         }
         return $recipes;
@@ -85,8 +123,9 @@ class RecipeController extends Controller
         if($cacheCategories){
             return ['msg'=>'分类信息', 'data'=>$cacheCategories,'code'=>0];
         }else{
-            $categories = RecipeCategory::where('parent_id', $parent_id)->orderBy('category_id','asc')->get();
 
+            $categories = RecipeCategory::where('parent_id', $parent_id)->orderBy('id','asc')->get();
+            
             Redis::setex('cacheCategories', 600, $categories);
 
             return ['msg' => '分类信息','code'=>0, 'data' => $categories];
@@ -95,111 +134,139 @@ class RecipeController extends Controller
 
 
 
+    /**
+     * 获取食谱详情
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function info(Request $request)
     {
         $id = $request->get('id');
+        $cacheKey = 'recipe:'.$id;
         
-        $cacheRecipes = Redis::get('recipe:'.$id);
-        if($cacheRecipes) {
-           return $cacheRecipes;
-        } else {
+        // 尝试从缓存获取
+        $cachedRecipe = Redis::get($cacheKey);
         
-            $recipe = \App\Recipe::where('id',$id)->with(['directions','ingredients'])->first();
-            if(empty($recipe)){
-                return [];
-            }
-            $cdn = getenv('COSV5_CDN');
+        if ($cachedRecipe) {
+            return ApiResponse::success(
+                json_decode($cachedRecipe, true),
+                '获取食谱详情成功'
+            );
+        }
+        
+        // 从数据库获取
+        $recipe = Recipe::where('id', $id)
+            ->with(['directions', 'ingredients'])
+            ->first();
+            
+        if (empty($recipe)) {
+            return ApiResponse::notFound('食谱不存在');
+        }
+        
+        // 准备数据
+        $cdn = getenv('COS_CDN');
+        $recipeData = $recipe->toArray();
+        $recipeData['image_src'] = $cdn . $recipe->image;
+        
+        // 缓存数据（JSON 格式）
+        Redis::setex($cacheKey, 600, json_encode($recipeData));
+        
+        return ApiResponse::success($recipeData, '获取食谱详情成功');
+    }
 
-            $recipe['image_src'] = $cdn .$recipe['image'];
+    /**
+     * 获取食谱列表
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index()
+    {
+        $recipes = Recipe::orderBy('created_at', 'desc')
+            ->get(['id', 'name', 'image']);
 
-            Redis::setex('recipe:'.$id, 600, $recipe);
-            return $recipe;
+        return ApiResponse::success($recipes, '获取食谱列表成功');
+    }
+
+    /**
+     * 获取创建表单数据
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function create()
+    {
+        try {
+            $form = Recipe::form();
+            $categories = RecipeCategory::where('id', 0)->get();
+            
+            return ApiResponse::success([
+                'form' => $form,
+                'categories' => $categories,
+            ]);
+        } catch (\Exception $e) {
+            return ApiResponse::serverError($e->getMessage());
         }
     }
 
-    public function index()
-    {
-    	$recipes = Recipe::orderBy('created_at', 'desc')
-    		->get(['id', 'name', 'image']);
-
-    	return response()
-    		->json([
-    			'recipes' => $recipes
-    		]);
-    }
-
-    public function create()
-    {
-        $form = Recipe::form();
-        $categories = RecipeCategory::where('parent_id', 0)->get();
-        //获取
-    	return response()
-    		->json([
-                'form' => $form,
-                'cateories' => $categories,
-    		]);
-    }
-
+    /**
+     * 创建新食谱
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request)
     {
-    	$this->validate($request, [
-    		'name' => 'required|max:255',
-    		'description' => 'required|max:3000',
-    		'image' => 'required|image',
-    		'ingredients' => 'required|array|min:1',
-    		'ingredients.*.name' => 'required|max:255',
-    		'ingredients.*.qty' => 'required|max:255',
-    		'directions' => 'required|array|min:1',
-    		'directions.*.description' => 'required|max:3000'
-    	]);
+       
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required|max:3000',
+            'image' => 'required|image',
+            'ingredients' => 'required|array|min:1',
+            'ingredients.*.name' => 'required|max:255',
+            'ingredients.*.qty' => 'required|max:255',
+            'directions' => 'required|array|min:1',
+            'directions.*.description' => 'required|max:3000',
+            'category_id' => 'required|exists:recipe_categories,id'
+        ]);
 
-    	$ingredients = [];
-
-        foreach($request->ingredients as $ingredient) {
+        $ingredients = [];
+        foreach ($request->ingredients as $ingredient) {
             $ingredients[] = new RecipeIngredient($ingredient);
         }
 
-	   $directions = [];
-
+        $directions = [];
         foreach($request->directions as $direction) {
             $directions[] = new RecipeDirection($direction);
         }
 
-    	if(!$request->hasFile('image') && !$request->file('image')->isValid()) {
-    		return abort(404, 'Image not uploaded!');
-    	}
+        if(!$request->hasFile('image') || !$request->file('image')->isValid()) {
+            return abort(404, 'Image not uploaded!');
+        }
 
-    	$filename = $this->getFileName($request->image);
-    	
-    	$FilePath = $request->image->getRealPath(); //获取文件临时存放位置
+        $filename = $this->getFileName($request->image);
+        $FilePath = $request->image->getRealPath(); // 获取文件临时存放位置
     
-    	Storage::disk('cosv5')->put($filename, file_get_contents($FilePath)); //存储文件
-    	
-    	$request->image->move(base_path('public/images'), $filename);
+        Storage::disk('cos')->put($filename, file_get_contents($FilePath)); // 存储文件
+        $request->image->move(base_path('public/images'), $filename);
 
-    	$recipe = new Recipe($request->only('name', 'description','category_id'));
+        $recipe = new Recipe($request->only('name', 'description', 'category_id'));
         $recipe->image = $filename;
         
-        $request->user()->recipes()
-    		->save($recipe);
+        $request->user()->recipes()->save($recipe);
 
-    	$recipe->ingredients()
-    		->saveMany($ingredients);
+        $recipe->ingredients()->saveMany($ingredients);
+        $recipe->directions()->saveMany($directions);
 
-    	$recipe->directions()
-    		->saveMany($directions);
-
-    	return response()
-    	    ->json([
-    	        'saved' => true,
-    	        'id' => $recipe->id,
-                'message' => 'You have successfully created recipe!'
-    	    ]);
+        return response()->json([
+            'saved' => true,
+            'id' => $recipe->id,
+            'message' => 'You have successfully created recipe!'
+        ]);
     }
 
     private function getFileName($file)
     {
-    	return str_random(32).'.'.$file->extension();
+    	return Str::random(32).'.'.$file->extension();
     }
 
     public function show($id)
@@ -216,7 +283,7 @@ class RecipeController extends Controller
 
     public function edit($id, Request $request)
     {
-        $categories = RecipeCategory::where('parent_id', 0)->get();
+        $categories = RecipeCategory::where('id', 0)->get();
         $form = $request->user()->recipes()
             ->with(['ingredients' => function($query) {
                 $query->get(['id', 'name', 'qty']);
@@ -227,15 +294,15 @@ class RecipeController extends Controller
                 'id', 'name', 'description', 'image'
             ]);
 
-        return response()
-            ->json([
-                'form' => $form,
-            'cateories' => $categories,
-            ]);
+        return ApiResponse::success([
+            'form' => $form,
+            'categories' => $categories,
+        ]);
     }
 
-    public function update($id, Request $request)
+    public function update($id)
     {
+        $request = request();
         // dd($request->all());
         $this->validate($request, [
             'name' => 'required|max:255',
@@ -296,10 +363,11 @@ class RecipeController extends Controller
 
             // remove old image
             $FilePath = $request->image->getRealPath(); //获取文件临时存放位置
-            Storage::disk('cosv5')->put($filename, file_get_contents($FilePath)); //存储文件
+            Storage::disk('cos')->put($filename, file_get_contents($FilePath)); //存储文件
             File::delete(base_path('/public/images/'.$recipe->image));
             $recipe->image = $filename;
         }
+           
 
         $recipe->save();
 
@@ -319,12 +387,10 @@ class RecipeController extends Controller
             $recipe->directions()->saveMany($directions);
         }
 
-        return response()
-            ->json([
-                'saved' => true,
-                'id' => $recipe->id,
-                'message' => 'You have successfully updated recipe!'
-            ]);
+        return ApiResponse::success(
+            ['id' => $recipe->id],
+                '食谱更新成功'
+            );
     }
 
     public function destroy($id, Request $request)

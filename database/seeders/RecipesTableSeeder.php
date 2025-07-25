@@ -4,9 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Faker\Factory;
-use App\Recipe;
-use App\RecipeDirection;
-use App\RecipeIngredient;
+use App\Models\Recipe;
+use App\Models\RecipeDirection;
+use App\Models\RecipeIngredient;
 
 class RecipesTableSeeder extends Seeder
 {

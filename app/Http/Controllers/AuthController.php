@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
-use Hash;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
 	public function __construct()
 	{
-	    $this->middleware('auth:api')->only('logout');
+	    //$this->middleware('auth:api')->only('logout');
 	}
 
     public function register(Request $request)
@@ -42,29 +43,31 @@ class AuthController extends Controller
             ->first();
 
         if($user && Hash::check($request->password, $user->password)) {
-            // generate new api token
-            $user->api_token = str_random(60);
-            $user->save();
+              // 生成 Sanctum token
+            $token = $user->createToken('api-token')->plainTextToken;
 
             return response()
                 ->json([
                     'authenticated' => true,
-                    'api_token' => $user->api_token,
-                    'user_id' => $user->id
+                    'api_token' => $token,
+                    'user_id' => $user->id,
+                    'is_admin' => $user->is_admin,
+                    'name' => $user->name,
                 ]);
         }
 
         return response()
             ->json([
-                'email' => ['Provided email and password does not match!']
+                'errors' => [
+                    'email' => ['Provided email and password does not match!']
+                ]
             ], 422);
     }
 
     public function logout(Request $request)
     {
-        $user = $request->user();
-        $user->api_token = null;
-        $user->save();
+        $request->user()->currentAccessToken()->delete();
+
 
         return response()
             ->json([

@@ -20,5 +20,24 @@ class RecipeCategory extends Model
      */
     protected $fillable = [
         'name',
+        'parent_id',
     ];
+
+ 
+
+    /**
+     * Get the child categories.
+     */
+    public function children()
+    {
+        return $this->hasMany(RecipeCategory::class, 'parent_id');
+    }
+
+    /**
+     * Check if the category has children.
+     */
+    public function hasChildren()
+    {
+        return $this->children()->exists();
+    }
 }

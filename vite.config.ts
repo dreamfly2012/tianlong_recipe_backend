@@ -5,9 +5,13 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+    server: {
+        port: 5173,
+        host: '127.0.0.1',
+    },
     plugins: [
         laravel({
-            input: ['resources/js/app.ts'],
+            input: ['resources/assets/js/app.js'],
             refresh: true,
         }),
         tailwindcss(),
@@ -22,7 +26,7 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, './resources/js'),
+            '@': path.resolve(__dirname, './resources/assets/js'),
         },
     },
 });

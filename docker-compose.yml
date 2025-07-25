@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Nginx 服务
   nginx:
@@ -10,7 +8,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./src:/var/www/html
+      - ./:/var/www/html
       - ./nginx/logs:/var/log/nginx
     depends_on:
       - php
@@ -24,19 +22,31 @@ services:
       dockerfile: Dockerfile
     container_name: php
     volumes:
-      - ./src:/var/www/html
+      - ./:/var/www/html
+    command: >
+      bash -c "
+        composer install --no-interaction --prefer-dist &&
+        chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache && # Force permissions again
+        php artisan key:generate --ansi && # Generate app key if not exists
+        php artisan migrate --force && # Run migrations
+        php artisan storage:link && # Create storage symlink
+        php-fpm # Start PHP-FPM
+        "
     networks:
       - app-network
+    depends_on:
+      mysql:
+        condition: service_healthy # 只有当 mysql 容器健康检查通过后才启动 php
 
   # Node.js 20 服务
   node:
     image: node:20
-    container_name: node
-    working_dir: /app
+    working_dir: /var/www/html
     volumes:
-      - ./src:/app
+      - ./:/var/www/html
     ports:
-      - "3000:3000"
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host"
     networks:
       - app-network
 
@@ -46,7 +56,7 @@ services:
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: app_db
+      MYSQL_DATABASE: recipe
       MYSQL_USER: app_user
       MYSQL_PASSWORD: app_password
     volumes:
@@ -55,6 +65,12 @@ services:
       - "3306:3306"
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"] # 使用root用户密码测试连接
+      interval: 10s # 每10秒检查一次
+      timeout: 5s   # 每次检查超时5秒
+      retries: 5    # 失败后重试5次
+      start_period: 30s # 容器启动后，等待30秒再开始第一次检查 (给MySQL初始化时间)
 
   # Redis 服务
   redis:

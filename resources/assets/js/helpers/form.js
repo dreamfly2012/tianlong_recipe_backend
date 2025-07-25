@@ -1,14 +1,16 @@
-export function toMulipartedForm(form, mode) {
-	if(mode === 'edit' && typeof form.image === 'string') {
-		const temp = JSON.parse(JSON.stringify(form))
-		delete temp.image
-		return temp
-	} else {
-		return objectToFormData(form)
-	}
+export function toMultipartedForm(form, mode) {
+  // 使用对象展开运算符浅拷贝，保留File对象
+  const temp = { ...form };
+  
+  // 仅在编辑模式且image是字符串URL时才删除image字段
+  if(mode === 'edit' && typeof form.image === 'string') {
+    delete temp.image;
+  }
+  
+  return objectToFormData(temp);
 }
 
-export function objectToFormData(obj, form, namespace) {
+function objectToFormData(obj, form, namespace) {
     let fd = form || new FormData()
     let formKey
     for(var property in obj) {

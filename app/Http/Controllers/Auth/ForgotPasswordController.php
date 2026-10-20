@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+// Laravel 12中已移除此trait，我们将其注释掉
+// use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
 class ForgotPasswordController extends Controller
 {
@@ -18,7 +19,8 @@ class ForgotPasswordController extends Controller
     |
     */
 
-    use SendsPasswordResetEmails;
+    // 注释掉这个trait的使用，因为Laravel 12中已移除
+    // use SendsPasswordResetEmails;
 
     /**
      * Create a new controller instance.

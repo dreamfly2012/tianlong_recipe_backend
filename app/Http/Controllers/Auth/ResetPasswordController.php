@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ResetsPasswords;
+// Laravel 12中已移除此trait，我们将其注释掉
+// use Illuminate\Foundation\Auth\ResetsPasswords;
 
 class ResetPasswordController extends Controller
 {
@@ -18,7 +19,8 @@ class ResetPasswordController extends Controller
     |
     */
 
-    use ResetsPasswords;
+    // 注释掉这个trait的使用，因为Laravel 12中已移除
+    // use ResetsPasswords;
 
     /**
      * Where to redirect users after resetting their password.

@@ -14,6 +14,25 @@ use App\Models\Recipe;
 use App\Models\RecipeCategory;
 use App\Http\Helpers\ApiResponse;
 
+/**
+ * @OA\Info(
+ *      version="1.0.0",
+ *      title="天龙食谱 API 文档",
+ *      description="天龙食谱后端 API 接口文档"
+ * )
+ * 
+ * @OA\Server(
+ *      url=L5_SWAGGER_CONST_HOST,
+ *      description="API Server"
+ * )
+ * 
+ * @OA\SecurityScheme(
+ *      securityScheme="bearerAuth",
+ *      type="http",
+ *      scheme="bearer",
+ *      bearerFormat="JWT"
+ * )
+ */
 
 class RecipeController extends Controller
 {
@@ -23,6 +42,29 @@ class RecipeController extends Controller
             ->except(['index', 'show', 'lists', 'info', 'category', 'search']);
     }
 
+    /**
+     * @OA\Get(
+     *      path="/api/recipe.lists",
+     *      operationId="getRecipesList",
+     *      tags={"Recipes"},
+     *      summary="获取食谱列表",
+     *      description="返回所有食谱或根据分类ID获取食谱列表",
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="分类ID",
+     *          required=false,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="成功操作"
+     *       ),
+     *       @OA\Response(response=400, description="无效请求")
+     * )
+     */
     public function lists(Request $request)
     {
         $category_id = $request->get('id',  0);
@@ -65,20 +107,21 @@ class RecipeController extends Controller
         
     }
 
-    //用户收藏列表
-    public function favourites(Request $request)
-    {
-        $user = $request->user();
-        dump($user);
-        $recipes = $user->recipes()->orderBy('id', 'desc')->paginate(15);
-        foreach ($recipes as $k => $v) {
-            $cdn = getenv('COS_CDN');
-            $recipes[$k]['image_src'] = $cdn . $v['image'];
-        }
-        return $recipes;
-    }
 
     //每日推荐
+    /**
+     * @OA\Get(
+     *      path="/api/recipe.daily",
+     *      operationId="getDailyRecipes",
+     *      tags={"Recipes"},
+     *      summary="获取每日推荐食谱",
+     *      description="返回每日推荐的食谱列表",
+     *      @OA\Response(
+     *          response=200,
+     *          description="成功操作"
+     *       )
+     * )
+     */
     public function daily(Request $request)
     {
         $recipes = Recipe::orderBy('id', 'desc')->paginate(15);
@@ -90,6 +133,19 @@ class RecipeController extends Controller
     }
 
     //根据ai生成食谱
+    /**
+     * @OA\Get(
+     *      path="/api/recipe.ai",
+     *      operationId="getAiRecipes",
+     *      tags={"Recipes"},
+     *      summary="获取AI生成的食谱",
+     *      description="返回由AI生成的食谱列表",
+     *      @OA\Response(
+     *          response=200,
+     *          description="成功操作"
+     *       )
+     * )
+     */
     public function ai(Request $request)
     {
         $recipes = Recipe::orderBy('id', 'desc')->paginate(15);
@@ -100,7 +156,110 @@ class RecipeController extends Controller
         return $recipes;
     }
 
+    /**
+     * @OA\Get(
+     *      path="/api/recipe.personalized",
+     *      operationId="getPersonalizedRecipes",
+     *      tags={"Recipes"},
+     *      summary="获取个性化推荐食谱",
+     *      description="返回根据用户偏好推荐的食谱列表",
+     *      @OA\Response(
+     *          response=200,
+     *          description="成功操作"
+     *       )
+     * )
+     */
+    public function personalized(Request $request)
+    {
+        $recipes = Recipe::orderBy('id', 'desc')->paginate(2);
+        foreach ($recipes as $k => $v) {
+            $cdn = getenv('COS_CDN');
+            $recipes[$k]['image_src'] = $cdn . $v['image'];
+        }
+        return $recipes;
+    }
 
+
+    /**
+     * @OA\Get(
+     *      path="/api/recipe.generate",
+     *      operationId="getGeneratedRecipes",
+     *      tags={"Recipes"},
+     *      summary="获取AI生成的食谱",
+     *      description="返回由AI生成的食谱列表",
+     *      @OA\Response(
+     *          response=200,
+     *          description="成功操作"
+     *       )
+     * )
+     */
+    public function generate(Request $request)
+    {
+        // 获取请求中的数据
+        $ingredientsInput = $request->get('ingredientsInput', '');
+        $preferencesInput = $request->get('preferencesInput', '');
+        $excludesInput = $request->get('excludesInput', '');
+        
+        // 解析数据
+        $ingredients = explode(',', $ingredientsInput);
+        $ingredients = array_map('trim', $ingredients);
+        $ingredients = array_filter($ingredients);
+        
+        $preferences = explode(',', $preferencesInput);
+        $preferences = array_map('trim', $preferences);
+        $preferences = array_filter($preferences);
+        
+        $excludes = explode(',', $excludesInput);
+        $excludes = array_map('trim', $excludes);
+        $excludes = array_filter($excludes);
+        
+        // 如果有输入食材，根据食材查找菜谱，否则随机获取一条菜谱
+        if (!empty($ingredients)) {
+            // 这里应该实现AI生成菜谱的逻辑
+            // 目前暂时随机获取一条菜谱并携带制作步骤信息
+            $recipe = Recipe::with(['directions', 'ingredients'])->inRandomOrder()->first();
+        } else {
+            // 随机获取一条菜谱并携带制作步骤信息
+            $recipe = Recipe::with(['directions', 'ingredients'])->inRandomOrder()->first();
+        }
+        
+        // 如果没有找到菜谱，返回错误信息
+        if (!$recipe) {
+            return ApiResponse::notFound('未找到菜谱');
+        }
+        
+        // 准备数据
+        $cdn = getenv('COS_CDN');
+        $recipeData = $recipe->toArray();
+        $recipeData['image_src'] = $cdn . $recipe->image;
+        
+        return ApiResponse::success($recipeData, '获取菜谱成功');
+    }
+
+
+    /**
+     * @OA\Get(
+     *      path="/api/recipe.search",
+     *      operationId="searchRecipes",
+     *      tags={"Recipes"},
+     *      summary="搜索食谱",
+     *      description="根据名称搜索食谱",
+     *      @OA\Parameter(
+     *          name="name",
+     *          description="食谱名称",
+     *          required=true,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="成功操作"
+     *       ),
+     *       @OA\Response(response=400, description="无效请求")
+     * )
+     */
     public function search(Request $request)
     {
         $name = $request->get('name');
@@ -413,6 +572,88 @@ class RecipeController extends Controller
             ->json([
                 'deleted' => true
             ]);
+    }
+    
+    /**
+     * 收藏食谱
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function favorite(Request $request)
+    {
+        $recipeId = $request->get('recipe_id');
+        $user = $request->user();
+        
+        $recipe = Recipe::findOrFail($recipeId);
+        
+        if (!$user->favoriteRecipes->contains($recipeId)) {
+            $user->favoriteRecipes()->attach($recipeId);
+            return ApiResponse::success(null, '食谱已收藏');
+        }
+        
+        return ApiResponse::success(null, '食谱已收藏');
+    }
+    
+    /**
+     * 取消收藏食谱
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unfavorite(Request $request)
+    {
+        $recipeId = $request->get('recipe_id');
+        $user = $request->user();
+        
+        $recipe = Recipe::findOrFail($recipeId);
+        
+        if ($user->favoriteRecipes->contains($recipeId)) {
+            $user->favoriteRecipes()->detach($recipeId);
+            return ApiResponse::success(null, '已取消收藏');
+        }
+        
+        return ApiResponse::success(null, '已取消收藏');
+    }
+
+    /**
+     * 判断用户是否收藏了该食谱
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function isFavorite(Request $request)
+    {
+        $recipeId = $request->get('recipe_id');
+        $user = $request->user();
+        
+        $recipe = Recipe::findOrFail($recipeId);
+        
+        if ($user->favoriteRecipes->contains($recipeId)) {
+            return ApiResponse::success(['isFavorite' => true], '已收藏');
+        }
+        
+        return ApiResponse::success(['isFavorite' => false], '未收藏');
+    }
+    /**
+     * 获取用户收藏的食谱列表
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function favoriteList(Request $request)
+    {
+        $user = $request->user();
+        $recipes = $user->favoriteRecipes()
+            ->orderBy('recipe_user.created_at', 'desc')
+            ->paginate(15);
+            
+        foreach ($recipes as $k => $v) {
+            $cdn = getenv('COS_CDN');
+            $recipes[$k]['image_src'] = $cdn . $v['image'];
+        }
+        
+        return ApiResponse::success($recipes, '获取收藏列表成功');
     }
     
     

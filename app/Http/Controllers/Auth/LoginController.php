@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+// Laravel 12中已移除此trait，我们将其注释掉
+// use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
@@ -18,7 +19,8 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    // 注释掉这个trait的使用，因为Laravel 12中已移除
+    // use AuthenticatesUsers;
 
     /**
      * Where to redirect users after login.
@@ -34,6 +36,6 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'logout']);
+        $this->middleware('guest')->except('logout');
     }
 }

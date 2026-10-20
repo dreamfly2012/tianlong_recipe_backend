@@ -1,0 +1,353 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "天龙食谱 API 文档",
+        "description": "天龙食谱后端 API 接口文档",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://my-default-host.com",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "用户登录",
+                "description": "通过邮箱和密码进行用户登录",
+                "operationId": "loginUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "登录成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "authenticated": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "user": {
+                                            "type": "object"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "认证失败"
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "用户注册",
+                "description": "创建一个新的用户账户",
+                "operationId": "registerUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "注册成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "registered": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "验证错误"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "用户登出",
+                "description": "注销当前用户会话",
+                "operationId": "logoutUser",
+                "responses": {
+                    "200": {
+                        "description": "登出成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "logged_out": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "认证失败"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/wechat/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "微信小程序登录",
+                "description": "通过微信小程序登录，如果用户不存在则自动注册",
+                "operationId": "wechatLogin",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "code"
+                                ],
+                                "properties": {
+                                    "code": {
+                                        "type": "string",
+                                        "example": "081VS80w3JWVyK2a2v0w3CxW80wVS80m"
+                                    },
+                                    "user_info": {
+                                        "type": "object",
+                                        "example": {
+                                            "nickName": "张三",
+                                            "avatarUrl": "头像地址"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "登录成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "authenticated": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        },
+                                        "user": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "认证失败"
+                    }
+                }
+            }
+        },
+        "/api/recipe.lists": {
+            "get": {
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "获取食谱列表",
+                "description": "返回所有食谱或根据分类ID获取食谱列表",
+                "operationId": "getRecipesList",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "分类ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功操作"
+                    },
+                    "400": {
+                        "description": "无效请求"
+                    }
+                }
+            }
+        },
+        "/api/recipe.daily": {
+            "get": {
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "获取每日推荐食谱",
+                "description": "返回每日推荐的食谱列表",
+                "operationId": "getDailyRecipes",
+                "responses": {
+                    "200": {
+                        "description": "成功操作"
+                    }
+                }
+            }
+        },
+        "/api/recipe.ai": {
+            "get": {
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "获取AI生成的食谱",
+                "description": "返回由AI生成的食谱列表",
+                "operationId": "getAiRecipes",
+                "responses": {
+                    "200": {
+                        "description": "成功操作"
+                    }
+                }
+            }
+        },
+        "/api/recipe.search": {
+            "get": {
+                "tags": [
+                    "Recipes"
+                ],
+                "summary": "搜索食谱",
+                "description": "根据名称搜索食谱",
+                "operationId": "searchRecipes",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "食谱名称",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功操作"
+                    },
+                    "400": {
+                        "description": "无效请求"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "Recipes",
+            "description": "Recipes"
+        }
+    ]
+}

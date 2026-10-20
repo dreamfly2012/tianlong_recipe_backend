@@ -20,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'wechat_openid', 'wechat_unionid', 'wechat_avatar', 'wechat_nickname'
     ];
 
 
@@ -36,8 +36,14 @@ class User extends Authenticatable
 
     public function recipes()
     {
-        return $this->hasmany(recipe::class);
+        return $this->hasMany(Recipe::class);
     }
+    
+    public function favoriteRecipes()
+    {
+        return $this->belongsToMany(Recipe::class, 'recipe_user', 'user_id', 'recipe_id')->withTimestamps();
+    }
+    
     /**
      * Get the attributes that should be cast.
      *

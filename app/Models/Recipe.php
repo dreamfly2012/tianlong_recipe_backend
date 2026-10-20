@@ -24,6 +24,11 @@ class Recipe extends Model
     {
         return $this->hasMany(RecipeDirection::class);
     }
+    
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'recipe_user', 'recipe_id', 'user_id')->withTimestamps();
+    }
 
     public static function form()
     {

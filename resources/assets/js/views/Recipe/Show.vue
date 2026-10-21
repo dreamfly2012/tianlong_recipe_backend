@@ -15,12 +15,12 @@
     <div v-if="recipe.id" class="max-w-6xl mx-auto">
       <!-- 标题栏 -->
       <div class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center">
-        <button @click="router.back()" class="text-blue-600 hover:text-blue-800 mb-4 sm:mb-0 flex items-center">
+        <router-link :to="{ name: 'recipes' }" class="text-blue-600 hover:text-blue-800 mb-4 sm:mb-0 flex items-center">
           <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
           </svg>
           返回列表
-        </button>
+        </router-link>
         <div v-if="authStore.isAuthenticated && (authStore.user.id === recipe.user_id || authStore.user.is_admin)" class="flex space-x-3">
           <router-link :to="`/recipes/${recipe.id}/edit`" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-sm transition duration-200 flex items-center">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,9 +42,9 @@
         <div class="md:flex">
           <!-- 食谱图片 -->
           <div class="md:w-1/3 bg-gray-100">
-            <img 
-              :src="recipe.image ? `/images/${recipe.image}` : '/images/placeholder.jpg'"
-              alt="{{ recipe.name }}"
+            <img
+              :src="recipe.image_src || (recipe.image ? `/images/${recipe.image}` : '/images/placeholder.jpg')"
+              :alt="recipe.name"
               class="w-full h-full object-cover"
               :class="!recipe.image ? 'opacity-50' : ''"
             >
@@ -109,8 +109,10 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { useFlash } from '@/composables/useFlash';
 import api from '@/helpers/api';
-import Flash from '@/helpers/flash';
+
+const { showSuccess, showError } = useFlash();
 
 // 响应式状态
 const recipe = ref({ id: null, user: {}, ingredients: [], directions: [], category: {} });
@@ -125,16 +127,13 @@ const fetchRecipe = async () => {
   error.value = null;
   try {
     const response = await api.get(`/recipes/${route.params.id}`);
-    recipe.value = response.data.recipe || {};
+    recipe.value = response.data.data || {};
   } catch (err) {
     console.error('Failed to fetch recipe:', err);
     error.value = err.response?.data?.message || '无法加载食谱详情，请稍后重试';
-    // 错误重定向
+
     if (err.response?.status === 404) {
       router.push({ name: 'not-found' });
-    } else if (err.response?.status === 401) {
-      authStore.logout();
-      router.push({ name: 'login' });
     }
   }
 };
@@ -145,19 +144,19 @@ const remove = async () => {
 
   try {
     isRemoving.value = true;
-    const response = await api.delete(`/api/recipes/${route.params.id}`);
-    if (response.data.deleted) {
-      Flash.setSuccess('食谱删除成功！');
+    const response = await api.delete(`/recipes/${route.params.id}`);
+
+    if (response.data.code === 0) {
+      showSuccess(response.data.message || '食谱删除成功！');
       router.push('/recipes');
     }
   } catch (err) {
     console.error('Failed to delete recipe:', err);
-    Flash.setError(err.response?.data?.message || '删除失败，请重试');
+    showError(err.response?.data?.message || '删除失败，请重试');
   } finally {
     isRemoving.value = false;
   }
 };
 
-// 组件挂载时获取数据
 onMounted(fetchRecipe);
 </script>

@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class RecipeCategory extends Model
 {
+    use HasFactory;
+
     /**
      * The table associated with the model.
      *
@@ -20,6 +23,7 @@ class RecipeCategory extends Model
      */
     protected $fillable = [
         'name',
+        'description',
         'parent_id',
     ];
 
@@ -39,5 +43,16 @@ class RecipeCategory extends Model
     public function hasChildren()
     {
         return $this->children()->exists();
+    }
+
+    /**
+     * 返回表单默认数据
+     */
+    public static function form()
+    {
+        return [
+            'name' => '',
+            'parent_id' => 0,
+        ];
     }
 }

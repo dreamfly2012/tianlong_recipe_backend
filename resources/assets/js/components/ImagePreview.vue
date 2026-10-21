@@ -29,7 +29,9 @@ const setPreview = () => {
     };
     fileReader.readAsDataURL(props.preview);
   } else if (typeof props.preview === 'string') {
-    image.value = `/images/${props.preview}`;
+    image.value = props.preview.startsWith('http') || props.preview.startsWith('/')
+      ? props.preview
+      : `/images/${props.preview}`;
   } else {
     image.value = null;
   }

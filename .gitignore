@@ -29,3 +29,7 @@ pnpm-lock.yaml
 /.zed
 /import/images
 /public/images
+/.venv_tools
+/workbuddy
+.workbuddy/
+/storage/logs/*.log

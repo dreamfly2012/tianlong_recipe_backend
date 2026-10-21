@@ -1,62 +1,67 @@
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 
-export const useFlash = () => {
-  const flash = ref<{
-    type: 'success' | 'error' | 'info' | 'warning' | null;
-    message: string;
-    show: boolean;
-  }>({
-    type: null,
-    message: '',
-    show: false
-  });
+type FlashType = 'success' | 'error' | 'info' | 'warning';
 
-  const showMessage = (type: 'success' | 'error' | 'info' | 'warning', message: string, duration = 5000) => {
-    flash.value = {
-      type,
-      message,
-      show: true
-    };
+interface FlashState {
+  type: FlashType | null;
+  message: string;
+  show: boolean;
+}
 
-    if (duration > 0) {
-      setTimeout(() => {
-        hideMessage();
-      }, duration);
-    }
-  };
+// 模块级单例：任何组件调用 useFlash 都共享同一份提示状态
+const flash = ref<FlashState>({
+  type: null,
+  message: '',
+  show: false,
+});
 
-  const hideMessage = () => {
-    flash.value.show = false;
-    // Small delay before clearing the message to allow for fade-out animation
-    setTimeout(() => {
-      flash.value.message = '';
-      flash.value.type = null;
-    }, 300);
-  };
+let hideTimer: ReturnType<typeof setTimeout> | null = null;
 
-  const showSuccess = (message: string, duration?: number) => {
-    showMessage('success', message, duration);
-  };
+const hideMessage = () => {
+  flash.value.show = false;
 
-  const showError = (message: string, duration?: number) => {
-    showMessage('error', message, duration);
-  };
+  if (hideTimer) {
+    clearTimeout(hideTimer);
+  }
 
-  const showInfo = (message: string, duration?: number) => {
-    showMessage('info', message, duration);
-  };
-
-  const showWarning = (message: string, duration?: number) => {
-    showMessage('warning', message, duration);
-  };
-
-  return {
-    flash: computed(() => flash.value),
-    showMessage,
-    hideMessage,
-    showSuccess,
-    showError,
-    showInfo,
-    showWarning
-  };
+  // 等淡出动画结束后再清空内容
+  hideTimer = setTimeout(() => {
+    flash.value.message = '';
+    flash.value.type = null;
+    hideTimer = null;
+  }, 300);
 };
+
+const showMessage = (type: FlashType, message: string, duration = 5000) => {
+  if (hideTimer) {
+    clearTimeout(hideTimer);
+    hideTimer = null;
+  }
+
+  flash.value = {
+    type,
+    message,
+    show: true,
+  };
+
+  if (duration > 0) {
+    hideTimer = setTimeout(() => {
+      hideMessage();
+    }, duration);
+  }
+};
+
+const showSuccess = (message: string, duration?: number) => showMessage('success', message, duration);
+const showError = (message: string, duration?: number) => showMessage('error', message, duration);
+const showInfo = (message: string, duration?: number) => showMessage('info', message, duration);
+const showWarning = (message: string, duration?: number) => showMessage('warning', message, duration);
+
+export const useFlash = () => ({
+  flash: computed(() => flash.value),
+  showMessage,
+  hideMessage,
+  showSuccess,
+  showError,
+  showInfo,
+  showWarning,
+});

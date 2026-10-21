@@ -13,6 +13,8 @@ export default defineConfigWithVueTs(
         rules: {
             'vue/multi-word-component-names': 'off',
             '@typescript-eslint/no-explicit-any': 'off',
+            // The SPA mixes plain JS (no lang attribute) and TypeScript components.
+            'vue/block-lang': ['error', { script: { lang: 'ts', allowNoLang: true } }],
         },
     },
     prettier,

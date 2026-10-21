@@ -25,10 +25,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import ImagePreview from './ImagePreview.vue';
 
-const props = defineProps({
+defineProps({
   modelValue: {
     type: [String, File],
     default: null

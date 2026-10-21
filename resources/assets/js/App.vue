@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useFlash } from '@/composables/useFlash';
@@ -50,9 +50,9 @@ const handleError = (error) => {
     
     // 未授权错误
     if (status === 401) {
-      authStore.logout();
+      authStore.clearUser();
       router.push({ name: 'login' });
-      showError('Your session has expired. Please log in again.');
+      showError('登录已过期，请重新登录。');
       return;
     }
     
@@ -74,6 +74,16 @@ const handleError = (error) => {
   }
 };
 
+const handleGlobalError = (event) => {
+  if (event instanceof PromiseRejectionEvent) {
+    handleError(event.reason);
+  } else if (event instanceof ErrorEvent) {
+    handleError(event.error);
+  } else {
+    handleError(event);
+  }
+};
+
 // 组件挂载时初始化
 defineOptions({
   inheritAttrs: false,
@@ -82,28 +92,14 @@ defineOptions({
 
 // 设置全局错误处理和初始化
 onMounted(() => {
-  // 优先初始化认证状态
   authStore.initialize();
-  
-  // 全局错误处理
-  const handleGlobalError = (event) => {
-    if (event instanceof PromiseRejectionEvent) {
-      handleError(event.reason);
-    } else if (event instanceof ErrorEvent) {
-      handleError(event.error);
-    } else {
-      handleError(event);
-    }
-  };
-  
   window.addEventListener('unhandledrejection', handleGlobalError);
   window.addEventListener('error', handleGlobalError);
-  
-  // 清理函数
-  return () => {
-    window.removeEventListener('unhandledrejection', handleGlobalError);
-    window.removeEventListener('error', handleGlobalError);
-  };
+});
+
+onUnmounted(() => {
+  window.removeEventListener('unhandledrejection', handleGlobalError);
+  window.removeEventListener('error', handleGlobalError);
 });
 </script>
 

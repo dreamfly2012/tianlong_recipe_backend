@@ -29,5 +29,18 @@
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
+        <env name="REDIS_HOST" value="127.0.0.1"/>
+        <!-- Disable real Tencent COS uploads during tests (otherwise storeImage hits the network) -->
+        <env name="COS_APP_ID" value=""/>
+        <env name="COS_SECRET_ID" value=""/>
+        <env name="COS_SECRET_KEY" value=""/>
+        <env name="COS_BUCKET" value=""/>
+        <env name="COS_REGION" value=""/>
+        <env name="COS_CDN" value=""/>
+        <env name="FILESYSTEM_DISK" value="local"/>
+        <!-- Disable external image sources during tests (otherwise auto-image hits the network) -->
+        <env name="UNSPLASH_ACCESS_KEY" value=""/>
+        <env name="PEXELS_API_KEY" value=""/>
+        <env name="IMAGE_LOCAL_FALLBACK" value="false"/>
     </php>
 </phpunit>

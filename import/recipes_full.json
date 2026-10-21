@@ -1,0 +1,4068 @@
+[
+  {
+    "name": "鱼香茄子",
+    "description": "酸甜微辣，茄子软糯入味。",
+    "image": "yuxiangqiezi1.jpg",
+    "category_id": 1,
+    "ingredients": [
+      {
+        "name": "茄子",
+        "qty": "2根"
+      },
+      {
+        "name": "猪肉末",
+        "qty": "100g"
+      },
+      {
+        "name": "郫县豆瓣酱",
+        "qty": "1勺"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "醋",
+        "qty": "1勺"
+      },
+      {
+        "name": "糖",
+        "qty": "1勺"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "姜末",
+        "qty": "适量"
+      },
+      {
+        "name": "淀粉",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "茄子切条，撒盐腌10分钟后挤干水分。"
+      },
+      {
+        "description": "锅中多放油，茄子炸至变软捞出沥油。"
+      },
+      {
+        "description": "锅留底油，炒香蒜末、姜末、豆瓣酱，加入肉末炒散。"
+      },
+      {
+        "description": "倒入茄子，加入生抽、醋、糖，翻炒均匀。"
+      },
+      {
+        "description": "淀粉水勾芡，炒匀出锅。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "蚝油生菜",
+    "description": "清爽脆嫩，蚝油提鲜。",
+    "image": "haoyoushengcai2.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "生菜",
+        "qty": "1颗"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "蚝油",
+        "qty": "1.5勺"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "糖",
+        "qty": "1/2勺"
+      },
+      {
+        "name": "水淀粉",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "生菜洗净掰片，沸水焯烫10秒捞出沥干。"
+      },
+      {
+        "description": "锅中热油，爆香蒜末，加入蚝油、生抽、糖和少量水。"
+      },
+      {
+        "description": "水淀粉勾芡，煮至粘稠。"
+      },
+      {
+        "description": "将芡汁淋在生菜上即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "可乐鸡翅",
+    "description": "鸡翅鲜嫩，酱香浓郁，带有可乐的甜味。",
+    "image": "kelejichi3.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "鸡翅",
+        "qty": "8个"
+      },
+      {
+        "name": "可乐",
+        "qty": "1罐"
+      },
+      {
+        "name": "生抽",
+        "qty": "2勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "姜片",
+        "qty": "3片"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鸡翅两面划刀，冷水下锅焯水捞出。"
+      },
+      {
+        "description": "锅中放油，煎至鸡翅两面金黄。"
+      },
+      {
+        "description": "加入姜片、料酒、生抽、老抽翻炒。"
+      },
+      {
+        "description": "倒入可乐，没过鸡翅，大火烧开转小火炖20分钟。"
+      },
+      {
+        "description": "收汁至浓稠即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "地三鲜",
+    "description": "土豆、茄子、青椒三种蔬菜的完美结合。",
+    "image": "disanxian4.jpg",
+    "category_id": 8,
+    "ingredients": [
+      {
+        "name": "土豆",
+        "qty": "1个"
+      },
+      {
+        "name": "茄子",
+        "qty": "1根"
+      },
+      {
+        "name": "青椒",
+        "qty": "1个"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "糖",
+        "qty": "1/2勺"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "土豆、茄子、青椒切块，分别炸至表面金黄。"
+      },
+      {
+        "description": "锅中留底油，爆香蒜末，倒入所有蔬菜翻炒。"
+      },
+      {
+        "description": "加入生抽、糖、盐，翻炒均匀。"
+      },
+      {
+        "description": "加少许水，焖煮2分钟，收汁即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "葱爆羊肉",
+    "description": "羊肉鲜嫩，葱香浓郁，快手家常菜。",
+    "image": "congbaoyangrou5.jpg",
+    "category_id": 8,
+    "ingredients": [
+      {
+        "name": "羊肉",
+        "qty": "300g"
+      },
+      {
+        "name": "大葱",
+        "qty": "2根"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "淀粉",
+        "qty": "1勺"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "羊肉切片，用生抽、料酒、淀粉腌制10分钟。"
+      },
+      {
+        "description": "大葱切段。"
+      },
+      {
+        "description": "锅中热油，爆香葱段，倒入羊肉大火快炒。"
+      },
+      {
+        "description": "羊肉变色后加盐调味，炒匀即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "糖醋里脊",
+    "description": "外酥里嫩，酸甜开胃的经典家常菜。",
+    "image": "tangculiji6.jpg",
+    "category_id": 8,
+    "ingredients": [
+      {
+        "name": "猪里脊",
+        "qty": "300g"
+      },
+      {
+        "name": "鸡蛋",
+        "qty": "1个"
+      },
+      {
+        "name": "淀粉",
+        "qty": "适量"
+      },
+      {
+        "name": "番茄酱",
+        "qty": "2勺"
+      },
+      {
+        "name": "白醋",
+        "qty": "1.5勺"
+      },
+      {
+        "name": "糖",
+        "qty": "2勺"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "里脊肉切条，加入蛋液、淀粉拌匀。"
+      },
+      {
+        "description": "油热后下肉条炸至金黄捞出。"
+      },
+      {
+        "description": "锅中加番茄酱、糖、醋、盐和少许水煮沸。"
+      },
+      {
+        "description": "倒入炸好的里脊翻炒均匀，收汁即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "干煸四季豆",
+    "description": "四季豆干香入味，搭配肉末更美味。",
+    "image": "ganbiansijidou7.jpg",
+    "category_id": 1,
+    "ingredients": [
+      {
+        "name": "四季豆",
+        "qty": "300g"
+      },
+      {
+        "name": "猪肉末",
+        "qty": "50g"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "5个"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "四季豆去筋掰段，油炸至表皮起皱捞出。"
+      },
+      {
+        "description": "锅中留底油，炒香肉末、蒜末、干辣椒。"
+      },
+      {
+        "description": "倒入四季豆，加生抽、盐翻炒均匀。"
+      },
+      {
+        "description": "炒至入味即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "水煮肉片",
+    "description": "麻辣鲜香，肉片滑嫩，川菜代表作。",
+    "image": "shuizhuroupian8.jpg",
+    "category_id": 1,
+    "ingredients": [
+      {
+        "name": "猪里脊",
+        "qty": "300g"
+      },
+      {
+        "name": "豆芽",
+        "qty": "200g"
+      },
+      {
+        "name": "生菜",
+        "qty": "100g"
+      },
+      {
+        "name": "郫县豆瓣酱",
+        "qty": "1.5勺"
+      },
+      {
+        "name": "花椒",
+        "qty": "1小把"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "10个"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "淀粉",
+        "qty": "1勺"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "肉片用生抽、淀粉腌制10分钟。"
+      },
+      {
+        "description": "豆芽、生菜焯水铺底。"
+      },
+      {
+        "description": "锅中炒香豆瓣酱、蒜末，加入高汤煮沸。"
+      },
+      {
+        "description": "下肉片煮熟，连汤倒入菜上。"
+      },
+      {
+        "description": "撒花椒、辣椒段，热油泼香。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "回锅肉",
+    "description": "肥而不腻，香辣下饭的四川名菜。",
+    "image": "huiguorou9.jpg",
+    "category_id": 1,
+    "ingredients": [
+      {
+        "name": "五花肉",
+        "qty": "400g"
+      },
+      {
+        "name": "青蒜",
+        "qty": "2根"
+      },
+      {
+        "name": "郫县豆瓣酱",
+        "qty": "1勺"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "姜片",
+        "qty": "3片"
+      }
+    ],
+    "directions": [
+      {
+        "description": "五花肉冷水下锅，加入姜片、料酒煮熟切片。"
+      },
+      {
+        "description": "锅中下肉片煸炒出油。"
+      },
+      {
+        "description": "加入豆瓣酱、生抽炒匀。"
+      },
+      {
+        "description": "下青蒜段翻炒断生即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "清蒸鲈鱼",
+    "description": "肉质鲜嫩，原汁原味的健康美食。",
+    "image": "qingzhengluyu10.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "鲈鱼",
+        "qty": "1条"
+      },
+      {
+        "name": "姜片",
+        "qty": "3片"
+      },
+      {
+        "name": "葱段",
+        "qty": "适量"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      },
+      {
+        "name": "蒸鱼豉油",
+        "qty": "2勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鲈鱼去鳞去内脏洗净，两面划刀。"
+      },
+      {
+        "description": "抹盐、料酒，鱼身铺姜片、葱段。"
+      },
+      {
+        "description": "大火蒸8分钟，取出倒掉多余汤汁。"
+      },
+      {
+        "description": "淋蒸鱼豉油，撒葱丝，热油泼香。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "番茄牛腩",
+    "description": "牛腩软烂，汤汁浓郁，酸甜开胃。",
+    "image": "fanqieniuan11.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "牛腩",
+        "qty": "500g"
+      },
+      {
+        "name": "番茄",
+        "qty": "3个"
+      },
+      {
+        "name": "土豆",
+        "qty": "1个"
+      },
+      {
+        "name": "胡萝卜",
+        "qty": "1根"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "姜片",
+        "qty": "3片"
+      }
+    ],
+    "directions": [
+      {
+        "description": "牛腩切块焯水，捞出沥干。"
+      },
+      {
+        "description": "番茄去皮切块，土豆、胡萝卜切块。"
+      },
+      {
+        "description": "锅中炒香姜片，下牛腩、番茄翻炒。"
+      },
+      {
+        "description": "加土豆、胡萝卜、生抽、料酒，加水炖1小时。"
+      },
+      {
+        "description": "牛腩软烂，汤汁浓郁即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "葱油拌面",
+    "description": "葱香浓郁，面条筋道，上海特色小吃。",
+    "image": "congyoubamian12.jpg",
+    "category_id": 3,
+    "ingredients": [
+      {
+        "name": "面条",
+        "qty": "200g"
+      },
+      {
+        "name": "小葱",
+        "qty": "3根"
+      },
+      {
+        "name": "生抽",
+        "qty": "2勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "糖",
+        "qty": "1勺"
+      },
+      {
+        "name": "食用油",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "面条煮熟捞出沥干。"
+      },
+      {
+        "description": "锅中多放油，小火炸香葱段。"
+      },
+      {
+        "description": "捞出葱段，油中加生抽、老抽、糖。"
+      },
+      {
+        "description": "将葱油汁倒在面条上拌匀即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "香菇滑鸡",
+    "description": "鸡肉滑嫩，香菇鲜美，广式家常菜。",
+    "image": "xiangguhuaji13.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "鸡腿肉",
+        "qty": "400g"
+      },
+      {
+        "name": "香菇",
+        "qty": "6朵"
+      },
+      {
+        "name": "姜片",
+        "qty": "3片"
+      },
+      {
+        "name": "生抽",
+        "qty": "1.5勺"
+      },
+      {
+        "name": "蚝油",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鸡腿肉切块，香菇切片。"
+      },
+      {
+        "description": "鸡肉用生抽、料酒腌制10分钟。"
+      },
+      {
+        "description": "锅中热油，炒香姜片，下鸡肉翻炒。"
+      },
+      {
+        "description": "加入香菇、蚝油，翻炒均匀。"
+      },
+      {
+        "description": "加少许水焖煮至鸡肉熟透。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "凉拌黄瓜",
+    "description": "清爽开胃，夏日必备小菜。",
+    "image": "liangbanhuanggua14.jpg",
+    "category_id": 8,
+    "ingredients": [
+      {
+        "name": "黄瓜",
+        "qty": "2根"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "香醋",
+        "qty": "1勺"
+      },
+      {
+        "name": "糖",
+        "qty": "1/2勺"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "黄瓜拍碎切段。"
+      },
+      {
+        "description": "加蒜末、生抽、香醋、糖、盐拌匀。"
+      },
+      {
+        "description": "腌制10分钟即可食用。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "香辣蟹",
+    "description": "蟹肉鲜美，香辣过瘾，宴客佳肴。",
+    "image": "xianglaxie15.jpg",
+    "category_id": 6,
+    "ingredients": [
+      {
+        "name": "大闸蟹",
+        "qty": "2只"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "10个"
+      },
+      {
+        "name": "花椒",
+        "qty": "1小把"
+      },
+      {
+        "name": "姜片",
+        "qty": "3片"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "大闸蟹洗净切块。"
+      },
+      {
+        "description": "锅中热油，爆香姜片、蒜末、干辣椒、花椒。"
+      },
+      {
+        "description": "下蟹块翻炒，加入生抽、料酒。"
+      },
+      {
+        "description": "加少许水焖煮至蟹熟。"
+      },
+      {
+        "description": "收汁出锅。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "干锅花菜",
+    "description": "花菜脆嫩，香辣入味，川菜代表。",
+    "image": "ganguohuacai16.jpg",
+    "category_id": 1,
+    "ingredients": [
+      {
+        "name": "花菜",
+        "qty": "400g"
+      },
+      {
+        "name": "五花肉",
+        "qty": "100g"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "8个"
+      },
+      {
+        "name": "花椒",
+        "qty": "1小把"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "花菜掰小朵焯水。"
+      },
+      {
+        "description": "五花肉切片炒出油，加入干辣椒、花椒、蒜末炒香。"
+      },
+      {
+        "description": "下花菜翻炒，加生抽、盐调味。"
+      },
+      {
+        "description": "炒匀出锅。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "梅菜扣肉",
+    "description": "肥而不腻，咸香软糯，客家经典名菜。",
+    "image": "meicaikourou17.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "五花肉",
+        "qty": "500g"
+      },
+      {
+        "name": "梅干菜",
+        "qty": "100g"
+      },
+      {
+        "name": "生抽",
+        "qty": "2勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "冰糖",
+        "qty": "20g"
+      },
+      {
+        "name": "姜片",
+        "qty": "3片"
+      }
+    ],
+    "directions": [
+      {
+        "description": "五花肉整块煮至八成熟，捞出晾凉切厚片。"
+      },
+      {
+        "description": "锅中加油，肉皮朝下煎至金黄。"
+      },
+      {
+        "description": "梅干菜泡发洗净，炒香备用。"
+      },
+      {
+        "description": "碗底铺梅干菜，上面码肉片，倒入调味汁。"
+      },
+      {
+        "description": "上锅蒸2小时，倒扣出盘。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "鱼香豆腐",
+    "description": "豆腐嫩滑，鱼香味浓，开胃下饭。",
+    "image": "yuxiangdoufu18.jpg",
+    "category_id": 1,
+    "ingredients": [
+      {
+        "name": "北豆腐",
+        "qty": "400g"
+      },
+      {
+        "name": "猪肉末",
+        "qty": "80g"
+      },
+      {
+        "name": "胡萝卜",
+        "qty": "1根"
+      },
+      {
+        "name": "木耳",
+        "qty": "适量"
+      },
+      {
+        "name": "郫县豆瓣酱",
+        "qty": "1勺"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "醋",
+        "qty": "1勺"
+      },
+      {
+        "name": "糖",
+        "qty": "1勺"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "淀粉",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "豆腐切块焯水备用。"
+      },
+      {
+        "description": "锅中炒香肉末、胡萝卜丝、木耳。"
+      },
+      {
+        "description": "加豆瓣酱、蒜末炒香，倒入豆腐。"
+      },
+      {
+        "description": "加生抽、醋、糖，淀粉水勾芡。"
+      },
+      {
+        "description": "炒匀出锅。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "孜然羊肉",
+    "description": "孜然香气浓郁，羊肉鲜嫩，回味无穷。",
+    "image": "ziranyangrou19.jpg",
+    "category_id": 8,
+    "ingredients": [
+      {
+        "name": "羊肉",
+        "qty": "300g"
+      },
+      {
+        "name": "洋葱",
+        "qty": "1个"
+      },
+      {
+        "name": "孜然粒",
+        "qty": "2勺"
+      },
+      {
+        "name": "辣椒粉",
+        "qty": "1勺"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "羊肉切片，用生抽、料酒腌制10分钟。"
+      },
+      {
+        "description": "锅中热油，炒香孜然粒、辣椒粉。"
+      },
+      {
+        "description": "下羊肉大火快炒，加入洋葱丝。"
+      },
+      {
+        "description": "加盐调味，炒匀出锅。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "清炒苦瓜",
+    "description": "苦瓜清香，爽口去火，夏日佳品。",
+    "image": "qingchaokugua20.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "苦瓜",
+        "qty": "1根"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      },
+      {
+        "name": "鸡精",
+        "qty": "1/2勺"
+      },
+      {
+        "name": "食用油",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "苦瓜去瓤切片，沸水焯烫。"
+      },
+      {
+        "description": "锅中热油，爆香蒜末，下苦瓜快炒。"
+      },
+      {
+        "description": "加盐、鸡精调味，炒匀出锅。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "椒盐虾",
+    "description": "外酥里嫩，咸香微辣，宴客佳肴。",
+    "image": "jiaoyanxia21.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "基围虾",
+        "qty": "400g"
+      },
+      {
+        "name": "淀粉",
+        "qty": "适量"
+      },
+      {
+        "name": "椒盐",
+        "qty": "1勺"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "葱花",
+        "qty": "适量"
+      },
+      {
+        "name": "食用油",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "虾剪须去虾线，洗净沥干。"
+      },
+      {
+        "description": "裹淀粉，下油锅炸至金黄捞出。"
+      },
+      {
+        "description": "锅中留底油，爆香蒜末、葱花。"
+      },
+      {
+        "description": "倒入虾，加椒盐翻炒均匀。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "蒜蓉粉丝蒸虾",
+    "description": "虾肉鲜嫩，蒜香浓郁，宴客必备。",
+    "image": "suanrongfensizhengxia22.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "大虾",
+        "qty": "8只"
+      },
+      {
+        "name": "粉丝",
+        "qty": "50g"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "葱花",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "粉丝泡软铺盘底，虾开背去虾线。"
+      },
+      {
+        "description": "蒜末炒香，加生抽、料酒调味。"
+      },
+      {
+        "description": "蒜蓉铺在虾上，入锅大火蒸6分钟。"
+      },
+      {
+        "description": "撒葱花，热油泼香。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "红烧鲫鱼",
+    "description": "鱼肉鲜嫩，酱香浓郁，家常下饭菜。",
+    "image": "hongshaojiyu23.jpg",
+    "category_id": 8,
+    "ingredients": [
+      {
+        "name": "鲫鱼",
+        "qty": "1条"
+      },
+      {
+        "name": "生抽",
+        "qty": "1.5勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "姜片",
+        "qty": "3片"
+      },
+      {
+        "name": "葱段",
+        "qty": "适量"
+      },
+      {
+        "name": "糖",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鲫鱼去鳞去内脏洗净，两面划刀。"
+      },
+      {
+        "description": "锅中热油，煎至两面金黄。"
+      },
+      {
+        "description": "加姜片、葱段、料酒、生抽、老抽、糖。"
+      },
+      {
+        "description": "加水炖20分钟，收汁即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "香辣鸡翅",
+    "description": "鸡翅外酥里嫩，香辣可口，深受欢迎。",
+    "image": "xianglajichi24.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "鸡翅中",
+        "qty": "10个"
+      },
+      {
+        "name": "辣椒粉",
+        "qty": "1勺"
+      },
+      {
+        "name": "孜然粉",
+        "qty": "1勺"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鸡翅两面划刀，用生抽、料酒、盐腌制30分钟。"
+      },
+      {
+        "description": "撒辣椒粉、孜然粉拌匀。"
+      },
+      {
+        "description": "烤箱200度烤20分钟，翻面再烤10分钟。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "蒜蓉空心菜",
+    "description": "清脆爽口，蒜香浓郁，夏日家常菜。",
+    "image": "suanrongkongxincai25.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "空心菜",
+        "qty": "400g"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      },
+      {
+        "name": "食用油",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "空心菜洗净切段。"
+      },
+      {
+        "description": "锅中热油，爆香蒜末，下空心菜快炒。"
+      },
+      {
+        "description": "加盐调味，炒匀出锅。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "红烧狮子头",
+    "description": "肉质鲜嫩，汤汁浓郁，淮扬名菜。",
+    "image": "hongshaoshizitou26.jpg",
+    "category_id": 3,
+    "ingredients": [
+      {
+        "name": "猪肉糜",
+        "qty": "400g"
+      },
+      {
+        "name": "荸荠",
+        "qty": "5个"
+      },
+      {
+        "name": "鸡蛋",
+        "qty": "1个"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "葱姜末",
+        "qty": "适量"
+      },
+      {
+        "name": "淀粉",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "猪肉糜加荸荠碎、葱姜末、蛋液、淀粉拌匀。"
+      },
+      {
+        "description": "搓成大丸子，油炸至表面金黄。"
+      },
+      {
+        "description": "锅中加水、老抽、生抽，放入丸子炖40分钟。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "清炒豆苗",
+    "description": "豆苗鲜嫩，清香爽口，营养丰富。",
+    "image": "qingchaodoumiao27.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "豆苗",
+        "qty": "300g"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      },
+      {
+        "name": "食用油",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "豆苗洗净沥干。"
+      },
+      {
+        "description": "锅中热油，爆香蒜末，下豆苗快炒。"
+      },
+      {
+        "description": "加盐调味，炒匀出锅。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "香辣牛蛙",
+    "description": "牛蛙肉质鲜嫩，香辣入味，川菜代表。",
+    "image": "xianglaniuwa28.jpg",
+    "category_id": 1,
+    "ingredients": [
+      {
+        "name": "牛蛙",
+        "qty": "500g"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "15个"
+      },
+      {
+        "name": "花椒",
+        "qty": "1小把"
+      },
+      {
+        "name": "生姜",
+        "qty": "3片"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "牛蛙剁块，清洗干净，用料酒腌制10分钟。"
+      },
+      {
+        "description": "锅中热油，爆香干辣椒、花椒、姜片、蒜末。"
+      },
+      {
+        "description": "下牛蛙大火快炒，加入生抽、盐调味。"
+      },
+      {
+        "description": "炒至牛蛙熟透，收汁出锅。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "铁板豆腐",
+    "description": "外焦里嫩，酱香浓郁，铁板风味。",
+    "image": "tiebandoufu29.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "北豆腐",
+        "qty": "400g"
+      },
+      {
+        "name": "鸡蛋",
+        "qty": "1个"
+      },
+      {
+        "name": "青椒",
+        "qty": "1个"
+      },
+      {
+        "name": "胡萝卜",
+        "qty": "1根"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "蚝油",
+        "qty": "1勺"
+      },
+      {
+        "name": "淀粉",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "豆腐切厚片，裹蛋液、淀粉。"
+      },
+      {
+        "description": "平底锅煎至两面金黄。"
+      },
+      {
+        "description": "青椒、胡萝卜切片炒熟，加生抽、蚝油调味。"
+      },
+      {
+        "description": "铁板加热，铺上豆腐和蔬菜，淋上酱汁。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "香辣花甲",
+    "description": "花甲鲜美，香辣过瘾，夜宵必备。",
+    "image": "xianglahuajia30.jpg",
+    "category_id": 6,
+    "ingredients": [
+      {
+        "name": "花甲",
+        "qty": "500g"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "10个"
+      },
+      {
+        "name": "花椒",
+        "qty": "1小把"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "生姜",
+        "qty": "3片"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "花甲用盐水浸泡吐沙，洗净。"
+      },
+      {
+        "description": "锅中热油，爆香干辣椒、花椒、姜片、蒜末。"
+      },
+      {
+        "description": "下花甲翻炒，加入生抽、料酒。"
+      },
+      {
+        "description": "加少许水，焖煮至花甲开口。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "红烧排骨",
+    "description": "排骨酥烂，酱香浓郁，家常下饭菜。",
+    "image": "hongshaopaigu31.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "猪肋排",
+        "qty": "500g"
+      },
+      {
+        "name": "生抽",
+        "qty": "2勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "冰糖",
+        "qty": "20g"
+      },
+      {
+        "name": "姜片",
+        "qty": "3片"
+      }
+    ],
+    "directions": [
+      {
+        "description": "排骨焯水捞出。"
+      },
+      {
+        "description": "锅中加油，炒糖色，倒入排骨翻炒。"
+      },
+      {
+        "description": "加生抽、老抽、料酒、姜片、清水。"
+      },
+      {
+        "description": "小火炖40分钟，收汁出锅。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "清蒸大闸蟹",
+    "description": "蟹肉鲜美，原汁原味，秋季美味。",
+    "image": "qingzhengdazhaxie32.jpg",
+    "category_id": 3,
+    "ingredients": [
+      {
+        "name": "大闸蟹",
+        "qty": "2只"
+      },
+      {
+        "name": "姜片",
+        "qty": "3片"
+      },
+      {
+        "name": "葱段",
+        "qty": "适量"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "大闸蟹刷洗干净，腹部朝上放入蒸锅。"
+      },
+      {
+        "description": "加姜片、葱段、料酒。"
+      },
+      {
+        "description": "大火蒸15分钟即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "蒜蓉茼蒿",
+    "description": "茼蒿清香，蒜香浓郁，营养丰富。",
+    "image": "suanrongtonghao33.jpg",
+    "category_id": 3,
+    "ingredients": [
+      {
+        "name": "茼蒿",
+        "qty": "300g"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      },
+      {
+        "name": "食用油",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "茼蒿洗净切段。"
+      },
+      {
+        "description": "锅中热油，爆香蒜末，下茼蒿快炒。"
+      },
+      {
+        "description": "加盐调味，炒匀出锅。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "香煎三文鱼",
+    "description": "三文鱼外焦里嫩，营养丰富，西式快手菜。",
+    "image": "xiangjiansanwenyu34.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "三文鱼排",
+        "qty": "2块"
+      },
+      {
+        "name": "黑胡椒",
+        "qty": "适量"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      },
+      {
+        "name": "柠檬",
+        "qty": "1片"
+      },
+      {
+        "name": "橄榄油",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "三文鱼排抹盐、黑胡椒腌制10分钟。"
+      },
+      {
+        "description": "平底锅加橄榄油，煎至两面金黄。"
+      },
+      {
+        "description": "出锅后挤柠檬汁即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "红烧带鱼",
+    "description": "带鱼外酥里嫩，酱香浓郁，家常美味。",
+    "image": "hongshaodaiyu35.jpg",
+    "category_id": 8,
+    "ingredients": [
+      {
+        "name": "带鱼",
+        "qty": "400g"
+      },
+      {
+        "name": "生抽",
+        "qty": "1.5勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "姜片",
+        "qty": "3片"
+      },
+      {
+        "name": "葱段",
+        "qty": "适量"
+      },
+      {
+        "name": "糖",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "带鱼切段，洗净沥干。"
+      },
+      {
+        "description": "裹干淀粉，油炸至金黄捞出。"
+      },
+      {
+        "description": "锅中加油，炒香姜片、葱段，加入带鱼。"
+      },
+      {
+        "description": "加生抽、老抽、料酒、糖，加水炖20分钟。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "葱爆鱿鱼",
+    "description": "鱿鱼脆嫩，葱香浓郁，快手下饭菜。",
+    "image": "congbaoyouyu36.jpg",
+    "category_id": 8,
+    "ingredients": [
+      {
+        "name": "鱿鱼",
+        "qty": "300g"
+      },
+      {
+        "name": "大葱",
+        "qty": "2根"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "姜片",
+        "qty": "2片"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鱿鱼切花刀焯水。"
+      },
+      {
+        "description": "锅中热油，爆香姜片、葱段。"
+      },
+      {
+        "description": "下鱿鱼大火快炒，加生抽、料酒、盐调味。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "香辣鸡爪",
+    "description": "鸡爪软糯入味，香辣可口，零食佳品。",
+    "image": "xianglajizhua37.jpg",
+    "category_id": 6,
+    "ingredients": [
+      {
+        "name": "鸡爪",
+        "qty": "500g"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "10个"
+      },
+      {
+        "name": "花椒",
+        "qty": "1小把"
+      },
+      {
+        "name": "生抽",
+        "qty": "2勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "姜片",
+        "qty": "3片"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鸡爪剪指甲，焯水捞出。"
+      },
+      {
+        "description": "锅中热油，爆香干辣椒、花椒、姜片。"
+      },
+      {
+        "description": "下鸡爪翻炒，加生抽、老抽、料酒。"
+      },
+      {
+        "description": "加水炖40分钟，收汁即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "红烧鲤鱼",
+    "description": "鲤鱼肉质鲜美，酱香浓郁，家常下饭菜。",
+    "image": "hongshaoliyu38.jpg",
+    "category_id": 8,
+    "ingredients": [
+      {
+        "name": "鲤鱼",
+        "qty": "1条"
+      },
+      {
+        "name": "生抽",
+        "qty": "1.5勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "姜片",
+        "qty": "3片"
+      },
+      {
+        "name": "葱段",
+        "qty": "适量"
+      },
+      {
+        "name": "糖",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鲤鱼去鳞去内脏洗净，两面划刀。"
+      },
+      {
+        "description": "锅中热油，煎至两面金黄。"
+      },
+      {
+        "description": "加姜片、葱段、料酒、生抽、老抽、糖。"
+      },
+      {
+        "description": "加水炖20分钟，收汁即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "干锅肥肠",
+    "description": "肥肠香辣入味，外焦里嫩，川菜经典。",
+    "image": "ganguofeichang39.jpg",
+    "category_id": 1,
+    "ingredients": [
+      {
+        "name": "猪肥肠",
+        "qty": "500g"
+      },
+      {
+        "name": "土豆",
+        "qty": "1个"
+      },
+      {
+        "name": "青椒",
+        "qty": "1个"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "10个"
+      },
+      {
+        "name": "花椒",
+        "qty": "1小把"
+      },
+      {
+        "name": "生姜",
+        "qty": "3片"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "肥肠处理干净，焯水切段。"
+      },
+      {
+        "description": "土豆切片炸至金黄，青椒切块。"
+      },
+      {
+        "description": "锅中热油，爆香干辣椒、花椒、姜片、蒜末。"
+      },
+      {
+        "description": "下肥肠、土豆、青椒翻炒，调味收汁。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "红烧鸡翅",
+    "description": "鸡翅酥烂入味，酱香浓郁，家常美味。",
+    "image": "hongshaojichi40.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "鸡翅中",
+        "qty": "10个"
+      },
+      {
+        "name": "生抽",
+        "qty": "2勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "冰糖",
+        "qty": "20g"
+      },
+      {
+        "name": "姜片",
+        "qty": "3片"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鸡翅两面划刀，焯水捞出。"
+      },
+      {
+        "description": "锅中加油，炒糖色，倒入鸡翅翻炒。"
+      },
+      {
+        "description": "加生抽、老抽、料酒、姜片、清水。"
+      },
+      {
+        "description": "小火炖30分钟，收汁出锅。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "清炒虾仁",
+    "description": "虾仁鲜嫩，色泽红亮，营养丰富。",
+    "image": "qingchaoxiaren41.jpg",
+    "category_id": 3,
+    "ingredients": [
+      {
+        "name": "虾仁",
+        "qty": "200g"
+      },
+      {
+        "name": "豌豆",
+        "qty": "50g"
+      },
+      {
+        "name": "胡萝卜",
+        "qty": "1根"
+      },
+      {
+        "name": "蛋清",
+        "qty": "1个"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "虾仁用蛋清、料酒、盐腌制10分钟。"
+      },
+      {
+        "description": "胡萝卜切丁，豌豆焯水。"
+      },
+      {
+        "description": "锅中热油，先炒胡萝卜、豌豆，再下虾仁快炒。"
+      },
+      {
+        "description": "炒至虾仁变色即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "蒜蓉西葫芦",
+    "description": "西葫芦清甜，蒜香浓郁，快手家常菜。",
+    "image": "suanrongxihulu42.jpg",
+    "category_id": 3,
+    "ingredients": [
+      {
+        "name": "西葫芦",
+        "qty": "1根"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      },
+      {
+        "name": "食用油",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "西葫芦切片。"
+      },
+      {
+        "description": "锅中热油，爆香蒜末，下西葫芦快炒。"
+      },
+      {
+        "description": "加盐调味，炒匀出锅。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "香辣牛肉",
+    "description": "牛肉鲜嫩，香辣可口，川菜风味。",
+    "image": "xianglaniurou43.jpg",
+    "category_id": 1,
+    "ingredients": [
+      {
+        "name": "牛肉",
+        "qty": "300g"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "10个"
+      },
+      {
+        "name": "花椒",
+        "qty": "1小把"
+      },
+      {
+        "name": "生姜",
+        "qty": "3片"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "牛肉切片，用生抽、料酒腌制10分钟。"
+      },
+      {
+        "description": "锅中热油，爆香干辣椒、花椒、姜片、蒜末。"
+      },
+      {
+        "description": "下牛肉大火快炒，加盐调味。"
+      },
+      {
+        "description": "炒至牛肉变色即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "红烧牛腩",
+    "description": "牛腩软烂，汤汁浓郁，家常下饭菜。",
+    "image": "hongshaoniunan44.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "牛腩",
+        "qty": "500g"
+      },
+      {
+        "name": "土豆",
+        "qty": "1个"
+      },
+      {
+        "name": "胡萝卜",
+        "qty": "1根"
+      },
+      {
+        "name": "生抽",
+        "qty": "2勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "姜片",
+        "qty": "3片"
+      }
+    ],
+    "directions": [
+      {
+        "description": "牛腩切块焯水，捞出沥干。"
+      },
+      {
+        "description": "锅中热油，炒香姜片，下牛腩翻炒。"
+      },
+      {
+        "description": "加土豆、胡萝卜、生抽、老抽、料酒，加水炖1小时。"
+      },
+      {
+        "description": "牛腩软烂，汤汁浓郁即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "香煎豆腐",
+    "description": "豆腐外焦里嫩，酱香浓郁，快手素菜。",
+    "image": "xiangjiandoufu45.jpg",
+    "category_id": 2,
+    "ingredients": [
+      {
+        "name": "北豆腐",
+        "qty": "400g"
+      },
+      {
+        "name": "生抽",
+        "qty": "1.5勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "葱花",
+        "qty": "适量"
+      },
+      {
+        "name": "食用油",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "豆腐切厚片，擦干水分。"
+      },
+      {
+        "description": "平底锅加油，煎至两面金黄。"
+      },
+      {
+        "description": "加生抽、老抽、葱花，翻炒均匀。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "葱爆猪肝",
+    "description": "猪肝鲜嫩，葱香浓郁，营养丰富。",
+    "image": "congbaozhugan46.jpg",
+    "category_id": 8,
+    "ingredients": [
+      {
+        "name": "猪肝",
+        "qty": "300g"
+      },
+      {
+        "name": "大葱",
+        "qty": "2根"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "淀粉",
+        "qty": "适量"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "猪肝切片，用生抽、料酒、淀粉腌制10分钟。"
+      },
+      {
+        "description": "大葱切段。"
+      },
+      {
+        "description": "锅中热油，爆香葱段，下猪肝快炒。"
+      },
+      {
+        "description": "加盐调味，炒匀出锅。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "香辣鱼块",
+    "description": "鱼块外酥里嫩，香辣可口，宴客佳肴。",
+    "image": "xianglayukuai47.jpg",
+    "category_id": 1,
+    "ingredients": [
+      {
+        "name": "草鱼",
+        "qty": "400g"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "10个"
+      },
+      {
+        "name": "花椒",
+        "qty": "1小把"
+      },
+      {
+        "name": "生姜",
+        "qty": "3片"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鱼块洗净沥干，用料酒腌制10分钟。"
+      },
+      {
+        "description": "锅中热油，炸至金黄捞出。"
+      },
+      {
+        "description": "锅中留底油，爆香干辣椒、花椒、姜片、蒜末。"
+      },
+      {
+        "description": "下鱼块翻炒，加生抽、盐调味。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "红烧豆腐",
+    "description": "豆腐软嫩，酱香浓郁，家常素菜。",
+    "image": "hongshaodoufu48.jpg",
+    "category_id": 3,
+    "ingredients": [
+      {
+        "name": "北豆腐",
+        "qty": "400g"
+      },
+      {
+        "name": "生抽",
+        "qty": "1.5勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "葱花",
+        "qty": "适量"
+      },
+      {
+        "name": "糖",
+        "qty": "1勺"
+      },
+      {
+        "name": "食用油",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "豆腐切块，擦干水分。"
+      },
+      {
+        "description": "锅中热油，煎至两面金黄。"
+      },
+      {
+        "description": "加生抽、老抽、糖、葱花，翻炒均匀。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "香辣鸡胗",
+    "description": "鸡胗脆嫩，香辣可口，快手下酒菜。",
+    "image": "xianglajizhen50.jpg",
+    "category_id": 1,
+    "ingredients": [
+      {
+        "name": "鸡胗",
+        "qty": "300g"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "8个"
+      },
+      {
+        "name": "花椒",
+        "qty": "1小把"
+      },
+      {
+        "name": "生姜",
+        "qty": "3片"
+      },
+      {
+        "name": "蒜末",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鸡胗切片，用生抽、料酒腌制10分钟。"
+      },
+      {
+        "description": "锅中热油，爆香干辣椒、花椒、姜片、蒜末。"
+      },
+      {
+        "description": "下鸡胗大火快炒，加盐调味。"
+      },
+      {
+        "description": "炒至鸡胗变色即可。"
+      }
+    ],
+    "user_id": 1
+  },
+  {
+    "name": "鱼香肉丝",
+    "category_id": 1,
+    "description": "咸甜酸辣兼备的经典川菜，肉丝滑嫩，木耳胡萝卜爽口。",
+    "ingredients": [
+      {
+        "name": "猪里脊",
+        "qty": "250g"
+      },
+      {
+        "name": "木耳",
+        "qty": "适量"
+      },
+      {
+        "name": "胡萝卜",
+        "qty": "半根"
+      },
+      {
+        "name": "青椒",
+        "qty": "1个"
+      },
+      {
+        "name": "泡椒",
+        "qty": "2勺"
+      },
+      {
+        "name": "葱姜蒜",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "醋",
+        "qty": "1勺"
+      },
+      {
+        "name": "糖",
+        "qty": "1勺"
+      },
+      {
+        "name": "淀粉",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "里脊切丝，加料酒、生抽、淀粉腌制10分钟。"
+      },
+      {
+        "description": "木耳、胡萝卜、青椒切丝；调鱼香汁：生抽、醋、糖、淀粉加少许水。"
+      },
+      {
+        "description": "热油滑炒肉丝至变色盛出。"
+      },
+      {
+        "description": "爆香葱姜蒜、泡椒，下蔬菜丝炒软。"
+      },
+      {
+        "description": "倒回肉丝，淋鱼香汁翻炒收汁即可。"
+      }
+    ],
+    "image": "yuxiangrousi.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "水煮鱼",
+    "category_id": 1,
+    "description": "麻辣鲜香、鱼肉滑嫩的川菜代表，红油诱人。",
+    "ingredients": [
+      {
+        "name": "草鱼",
+        "qty": "1条"
+      },
+      {
+        "name": "豆芽",
+        "qty": "200g"
+      },
+      {
+        "name": "生菜",
+        "qty": "100g"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "15个"
+      },
+      {
+        "name": "花椒",
+        "qty": "1小把"
+      },
+      {
+        "name": "郫县豆瓣酱",
+        "qty": "2勺"
+      },
+      {
+        "name": "姜蒜",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "淀粉",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鱼片用料酒、生抽、淀粉腌制。"
+      },
+      {
+        "description": "豆芽、生菜焯水铺碗底。"
+      },
+      {
+        "description": "炒香豆瓣酱、姜蒜，加汤煮沸，下鱼片煮熟连汤倒入。"
+      },
+      {
+        "description": "撒干辣椒、花椒，烧热油泼香。"
+      }
+    ],
+    "image": "shuizhuyu.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "宫保鸡丁",
+    "category_id": 1,
+    "description": "糊辣荔枝口，鸡肉嫩滑、花生酥香。",
+    "ingredients": [
+      {
+        "name": "鸡胸肉",
+        "qty": "300g"
+      },
+      {
+        "name": "花生米",
+        "qty": "50g"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "8个"
+      },
+      {
+        "name": "花椒",
+        "qty": "1小把"
+      },
+      {
+        "name": "葱段",
+        "qty": "2根"
+      },
+      {
+        "name": "生抽",
+        "qty": "2勺"
+      },
+      {
+        "name": "醋",
+        "qty": "1勺"
+      },
+      {
+        "name": "糖",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "淀粉",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鸡丁用料酒、生抽、淀粉腌制15分钟。"
+      },
+      {
+        "description": "花生米炸香备用。"
+      },
+      {
+        "description": "热油爆香干辣椒、花椒，下鸡丁滑炒至变色。"
+      },
+      {
+        "description": "加葱段，淋宫保汁（生抽、醋、糖、淀粉）翻炒。"
+      },
+      {
+        "description": "加入花生米快速翻匀出锅。"
+      }
+    ],
+    "image": "gongbaojiding.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "夫妻肺片",
+    "category_id": 1,
+    "description": "红油透亮、麻辣鲜香，川味凉菜经典。",
+    "ingredients": [
+      {
+        "name": "牛腱肉",
+        "qty": "300g"
+      },
+      {
+        "name": "牛肚",
+        "qty": "200g"
+      },
+      {
+        "name": "花生碎",
+        "qty": "适量"
+      },
+      {
+        "name": "香菜",
+        "qty": "适量"
+      },
+      {
+        "name": "红油辣椒",
+        "qty": "2勺"
+      },
+      {
+        "name": "花椒粉",
+        "qty": "1勺"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "醋",
+        "qty": "1勺"
+      },
+      {
+        "name": "蒜泥",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "牛腱、牛肚煮熟放凉后切片。"
+      },
+      {
+        "description": "调红油汁：红油、生抽、醋、花椒粉、蒜泥加少许汤。"
+      },
+      {
+        "description": "将汁淋在肉片上，撒花生碎、香菜即可。"
+      }
+    ],
+    "image": "fuqifeipian.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "辣子鸡",
+    "category_id": 1,
+    "description": "麻辣酥香、辣椒堆里寻鸡丁，下酒一绝。",
+    "ingredients": [
+      {
+        "name": "鸡腿肉",
+        "qty": "500g"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "30个"
+      },
+      {
+        "name": "花椒",
+        "qty": "1小把"
+      },
+      {
+        "name": "葱姜蒜",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "淀粉",
+        "qty": "适量"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鸡块用料酒、生抽、淀粉腌制，炸至金黄捞出。"
+      },
+      {
+        "description": "热油爆香干辣椒、花椒、葱姜蒜。"
+      },
+      {
+        "description": "下鸡块翻炒，加盐调味，炒至辣椒香脆即可。"
+      }
+    ],
+    "image": "laziji.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "酸菜鱼",
+    "category_id": 1,
+    "description": "汤鲜酸爽、鱼片滑嫩，开胃下饭。",
+    "ingredients": [
+      {
+        "name": "黑鱼",
+        "qty": "1条"
+      },
+      {
+        "name": "酸菜",
+        "qty": "200g"
+      },
+      {
+        "name": "泡椒",
+        "qty": "5个"
+      },
+      {
+        "name": "姜蒜",
+        "qty": "适量"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "10个"
+      },
+      {
+        "name": "花椒",
+        "qty": "1小把"
+      },
+      {
+        "name": "蛋清",
+        "qty": "1个"
+      },
+      {
+        "name": "淀粉",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鱼片用蛋清、淀粉、料酒腌制。"
+      },
+      {
+        "description": "炒香酸菜、泡椒、姜蒜，加水煮沸。"
+      },
+      {
+        "description": "下鱼片滑熟，连汤倒入碗中。"
+      },
+      {
+        "description": "撒干辣椒、花椒，热油泼香。"
+      }
+    ],
+    "image": "suancaiyu.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "白切鸡",
+    "category_id": 2,
+    "description": "皮爽肉滑、原汁原味，粤式宴客头盘。",
+    "ingredients": [
+      {
+        "name": "三黄鸡",
+        "qty": "1只"
+      },
+      {
+        "name": "姜",
+        "qty": "适量"
+      },
+      {
+        "name": "葱",
+        "qty": "适量"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "2勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鸡洗净，水中加姜葱，整鸡浸煮约15分钟，关火焖10分钟。"
+      },
+      {
+        "description": "捞出过冰水，斩件装盘。"
+      },
+      {
+        "description": "姜葱切末，加生抽、盐调成蘸料。"
+      }
+    ],
+    "image": "baieji.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "蜜汁叉烧",
+    "category_id": 2,
+    "description": "外焦里嫩、蜜汁油亮，广式烧味招牌。",
+    "ingredients": [
+      {
+        "name": "梅花肉",
+        "qty": "500g"
+      },
+      {
+        "name": "叉烧酱",
+        "qty": "3勺"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "蜂蜜",
+        "qty": "2勺"
+      },
+      {
+        "name": "蒜",
+        "qty": "适量"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "肉用叉烧酱、生抽、料酒、蒜腌制2小时。"
+      },
+      {
+        "description": "烤箱200度烤20分钟，刷蜂蜜翻面再烤15分钟。"
+      },
+      {
+        "description": "取出切片，淋上烤盘蜜汁即可。"
+      }
+    ],
+    "image": "mizhichashao.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "鲜虾肠粉",
+    "category_id": 2,
+    "description": "米皮晶莹、虾仁鲜甜，广式早茶经典。",
+    "ingredients": [
+      {
+        "name": "粘米粉",
+        "qty": "100g"
+      },
+      {
+        "name": "澄粉",
+        "qty": "30g"
+      },
+      {
+        "name": "虾仁",
+        "qty": "200g"
+      },
+      {
+        "name": "葱花",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "油",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "粘米粉、澄粉加水调成米浆。"
+      },
+      {
+        "description": "盘中刷油，倒薄浆蒸2分钟，放虾仁再蒸1分钟。"
+      },
+      {
+        "description": "取出卷起切段，淋生抽、撒葱花。"
+      }
+    ],
+    "image": "xianxiachangfen.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "广式煲仔饭",
+    "category_id": 2,
+    "description": "锅巴香脆、腊味咸香，一锅出饭与菜。",
+    "ingredients": [
+      {
+        "name": "大米",
+        "qty": "2杯"
+      },
+      {
+        "name": "腊肠",
+        "qty": "2根"
+      },
+      {
+        "name": "腊肉",
+        "qty": "100g"
+      },
+      {
+        "name": "青菜",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "蚝油",
+        "qty": "1勺"
+      },
+      {
+        "name": "糖",
+        "qty": "1/2勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "米洗净加水煮开，转小火。"
+      },
+      {
+        "description": "铺腊肠腊肉，加盖焖至饭熟。"
+      },
+      {
+        "description": "烫熟青菜，调豉油汁（生抽、蚝油、糖）淋饭上。"
+      }
+    ],
+    "image": "guangshibaozifan.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "咕噜肉",
+    "category_id": 2,
+    "description": "外酥里嫩、酸甜开胃，粤式经典。",
+    "ingredients": [
+      {
+        "name": "猪里脊",
+        "qty": "300g"
+      },
+      {
+        "name": "菠萝",
+        "qty": "100g"
+      },
+      {
+        "name": "青椒",
+        "qty": "1个"
+      },
+      {
+        "name": "红椒",
+        "qty": "1个"
+      },
+      {
+        "name": "番茄酱",
+        "qty": "2勺"
+      },
+      {
+        "name": "白醋",
+        "qty": "1勺"
+      },
+      {
+        "name": "糖",
+        "qty": "2勺"
+      },
+      {
+        "name": "淀粉",
+        "qty": "适量"
+      },
+      {
+        "name": "鸡蛋",
+        "qty": "1个"
+      }
+    ],
+    "directions": [
+      {
+        "description": "里脊切块裹蛋液淀粉，炸至金黄。"
+      },
+      {
+        "description": "调糖醋汁：番茄酱、糖、醋加少许水。"
+      },
+      {
+        "description": "炒香青红椒、菠萝，倒汁煮沸，下肉块翻匀。"
+      }
+    ],
+    "image": "gulourou.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "清蒸石斑鱼",
+    "category_id": 2,
+    "description": "鱼肉细嫩、鲜味十足，宴席硬菜。",
+    "ingredients": [
+      {
+        "name": "石斑鱼",
+        "qty": "1条"
+      },
+      {
+        "name": "姜",
+        "qty": "适量"
+      },
+      {
+        "name": "葱",
+        "qty": "适量"
+      },
+      {
+        "name": "蒸鱼豉油",
+        "qty": "2勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鱼洗净划刀，抹盐料酒，鱼身铺姜葱。"
+      },
+      {
+        "description": "大火蒸8分钟，取出倒掉多余汤汁。"
+      },
+      {
+        "description": "淋蒸鱼豉油，撒葱丝，烧热油泼香。"
+      }
+    ],
+    "image": "qingzhengshibanyu.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "松鼠桂鱼",
+    "category_id": 3,
+    "description": "形似松鼠、外酥里嫩，苏帮名菜。",
+    "ingredients": [
+      {
+        "name": "桂鱼",
+        "qty": "1条"
+      },
+      {
+        "name": "番茄酱",
+        "qty": "3勺"
+      },
+      {
+        "name": "糖",
+        "qty": "2勺"
+      },
+      {
+        "name": "白醋",
+        "qty": "1.5勺"
+      },
+      {
+        "name": "淀粉",
+        "qty": "适量"
+      },
+      {
+        "name": "松子",
+        "qty": "适量"
+      },
+      {
+        "name": "青豆",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鱼去骨改花刀，裹淀粉。"
+      },
+      {
+        "description": "油炸至金黄酥脆，摆盘成松鼠形。"
+      },
+      {
+        "description": "番茄酱、糖、醋煮汁，淋鱼身，撒松子青豆。"
+      }
+    ],
+    "image": "songshuguiyu.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "东坡肉",
+    "category_id": 3,
+    "description": "色如玛瑙、肥而不腻，慢火细炖。",
+    "ingredients": [
+      {
+        "name": "五花肉",
+        "qty": "500g"
+      },
+      {
+        "name": "冰糖",
+        "qty": "30g"
+      },
+      {
+        "name": "生抽",
+        "qty": "2勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "200ml"
+      },
+      {
+        "name": "姜葱",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "五花肉切块焯水。"
+      },
+      {
+        "description": "砂锅底铺葱姜，肉皮朝下，加冰糖、生抽、老抽、料酒。"
+      },
+      {
+        "description": "小火炖1.5小时，收汁后翻面即可。"
+      }
+    ],
+    "image": "dongporou.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "盐水鸭",
+    "category_id": 3,
+    "description": "皮白肉嫩、咸鲜清香，金陵名菜。",
+    "ingredients": [
+      {
+        "name": "鸭",
+        "qty": "半只"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      },
+      {
+        "name": "花椒",
+        "qty": "1勺"
+      },
+      {
+        "name": "姜",
+        "qty": "适量"
+      },
+      {
+        "name": "葱",
+        "qty": "适量"
+      },
+      {
+        "name": "八角",
+        "qty": "2个"
+      }
+    ],
+    "directions": [
+      {
+        "description": "盐炒花椒，抹鸭身腌制2小时。"
+      },
+      {
+        "description": "清水加姜葱八角煮开，下鸭煮30分钟。"
+      },
+      {
+        "description": "捞出晾凉斩件装盘。"
+      }
+    ],
+    "image": "yanshuiya.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "扬州炒饭",
+    "category_id": 3,
+    "description": "粒粒分明、配料丰富，淮扬经典。",
+    "ingredients": [
+      {
+        "name": "米饭",
+        "qty": "2碗"
+      },
+      {
+        "name": "虾仁",
+        "qty": "100g"
+      },
+      {
+        "name": "火腿",
+        "qty": "50g"
+      },
+      {
+        "name": "鸡蛋",
+        "qty": "2个"
+      },
+      {
+        "name": "青豆",
+        "qty": "适量"
+      },
+      {
+        "name": "胡萝卜",
+        "qty": "适量"
+      },
+      {
+        "name": "葱花",
+        "qty": "适量"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鸡蛋炒散盛出，虾仁滑熟。"
+      },
+      {
+        "description": "米饭下锅炒散，加入所有配料。"
+      },
+      {
+        "description": "加盐、葱花炒匀即可。"
+      }
+    ],
+    "image": "yangzhouchaofan.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "叫花鸡",
+    "category_id": 3,
+    "description": "荷叶清香、泥封慢烤，肉质酥烂。",
+    "ingredients": [
+      {
+        "name": "三黄鸡",
+        "qty": "1只"
+      },
+      {
+        "name": "荷叶",
+        "qty": "2张"
+      },
+      {
+        "name": "黄泥",
+        "qty": "适量"
+      },
+      {
+        "name": "香菇",
+        "qty": "5朵"
+      },
+      {
+        "name": "葱",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "2勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鸡用生抽料酒腌制，腹中塞香菇葱。"
+      },
+      {
+        "description": "荷叶包鸡，外层裹上黄泥。"
+      },
+      {
+        "description": "烤箱200度烤2小时，敲开泥壳即可。"
+      }
+    ],
+    "image": "jiaohuaji.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "佛跳墙",
+    "category_id": 4,
+    "description": "山珍海味一坛煨，闽菜状元。",
+    "ingredients": [
+      {
+        "name": "鲍鱼",
+        "qty": "2个"
+      },
+      {
+        "name": "海参",
+        "qty": "1条"
+      },
+      {
+        "name": "花胶",
+        "qty": "适量"
+      },
+      {
+        "name": "蹄筋",
+        "qty": "适量"
+      },
+      {
+        "name": "瑶柱",
+        "qty": "适量"
+      },
+      {
+        "name": "老母鸡",
+        "qty": "半只"
+      },
+      {
+        "name": "姜",
+        "qty": "适量"
+      },
+      {
+        "name": "料酒",
+        "qty": "2勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "各食材分别泡发、焯水备用。"
+      },
+      {
+        "description": "老母鸡吊高汤。"
+      },
+      {
+        "description": "食材入坛加汤、料酒，文火炖3小时。"
+      }
+    ],
+    "image": "fotiaoqiang.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "荔枝肉",
+    "category_id": 4,
+    "description": "色红形圆如荔枝，酸甜酥脆。",
+    "ingredients": [
+      {
+        "name": "猪里脊",
+        "qty": "300g"
+      },
+      {
+        "name": "荸荠",
+        "qty": "5个"
+      },
+      {
+        "name": "番茄酱",
+        "qty": "2勺"
+      },
+      {
+        "name": "白醋",
+        "qty": "1勺"
+      },
+      {
+        "name": "糖",
+        "qty": "2勺"
+      },
+      {
+        "name": "淀粉",
+        "qty": "适量"
+      },
+      {
+        "name": "鸡蛋",
+        "qty": "1个"
+      }
+    ],
+    "directions": [
+      {
+        "description": "里脊切花刀块，裹蛋液淀粉炸金黄。"
+      },
+      {
+        "description": "荸荠切块同炸。"
+      },
+      {
+        "description": "番茄酱、糖、醋煮汁，下肉与荸荠翻匀。"
+      }
+    ],
+    "image": "lizhirou.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "沙茶面",
+    "category_id": 4,
+    "description": "汤头浓郁、沙茶飘香，闽南风味。",
+    "ingredients": [
+      {
+        "name": "碱水面",
+        "qty": "200g"
+      },
+      {
+        "name": "沙茶酱",
+        "qty": "2勺"
+      },
+      {
+        "name": "虾仁",
+        "qty": "100g"
+      },
+      {
+        "name": "鱿鱼",
+        "qty": "100g"
+      },
+      {
+        "name": "瘦肉",
+        "qty": "100g"
+      },
+      {
+        "name": "高汤",
+        "qty": "适量"
+      },
+      {
+        "name": "葱花",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "沙茶酱炒香，加高汤煮沸。"
+      },
+      {
+        "description": "下虾仁、鱿鱼、瘦肉煮熟。"
+      },
+      {
+        "description": "面煮熟入碗，浇汤撒葱花。"
+      }
+    ],
+    "image": "shachamian.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "海蛎煎",
+    "category_id": 4,
+    "description": "海蛎鲜甜、外酥内嫩，闽南小吃。",
+    "ingredients": [
+      {
+        "name": "海蛎",
+        "qty": "200g"
+      },
+      {
+        "name": "鸡蛋",
+        "qty": "2个"
+      },
+      {
+        "name": "地瓜粉",
+        "qty": "50g"
+      },
+      {
+        "name": "青菜",
+        "qty": "适量"
+      },
+      {
+        "name": "葱花",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "海蛎洗净，加地瓜粉、水、蛋液调成糊。"
+      },
+      {
+        "description": "热油煎至两面金黄。"
+      },
+      {
+        "description": "撒青菜葱花，淋生抽即可。"
+      }
+    ],
+    "image": "hailijian.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "西湖醋鱼",
+    "category_id": 5,
+    "description": "鱼肉鲜嫩、糖醋如蟹，杭帮名菜。",
+    "ingredients": [
+      {
+        "name": "草鱼",
+        "qty": "1条"
+      },
+      {
+        "name": "姜末",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "醋",
+        "qty": "2勺"
+      },
+      {
+        "name": "糖",
+        "qty": "1.5勺"
+      },
+      {
+        "name": "淀粉",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鱼洗净，沸水中煮约5分钟捞出装盘。"
+      },
+      {
+        "description": "姜末、生抽、醋、糖、淀粉煮成芡汁。"
+      },
+      {
+        "description": "将芡汁浇在鱼身上即可。"
+      }
+    ],
+    "image": "xihucuyu.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "龙井虾仁",
+    "category_id": 5,
+    "description": "茶香清雅、虾仁洁白，杭州名菜。",
+    "ingredients": [
+      {
+        "name": "虾仁",
+        "qty": "300g"
+      },
+      {
+        "name": "龙井茶叶",
+        "qty": "适量"
+      },
+      {
+        "name": "蛋清",
+        "qty": "1个"
+      },
+      {
+        "name": "淀粉",
+        "qty": "1勺"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "虾仁用蛋清、淀粉、料酒腌制，龙井茶泡开取汁。"
+      },
+      {
+        "description": "热油滑炒虾仁至变色。"
+      },
+      {
+        "description": "加茶汁、盐快速翻炒均匀。"
+      }
+    ],
+    "image": "longjingxiaren.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "宋嫂鱼羹",
+    "category_id": 5,
+    "description": "羹汤醇厚、酸鲜开胃，临安古味。",
+    "ingredients": [
+      {
+        "name": "鳜鱼",
+        "qty": "1条"
+      },
+      {
+        "name": "火腿",
+        "qty": "30g"
+      },
+      {
+        "name": "香菇",
+        "qty": "3朵"
+      },
+      {
+        "name": "笋",
+        "qty": "适量"
+      },
+      {
+        "name": "鸡蛋",
+        "qty": "1个"
+      },
+      {
+        "name": "淀粉",
+        "qty": "2勺"
+      },
+      {
+        "name": "醋",
+        "qty": "1勺"
+      },
+      {
+        "name": "胡椒粉",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鱼肉蒸熟拆成丝，火腿、香菇、笋切丝。"
+      },
+      {
+        "description": "高汤煮沸下所有丝。"
+      },
+      {
+        "description": "勾芡淋蛋液，加醋、胡椒粉调味。"
+      }
+    ],
+    "image": "songsaoyugeng.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "剁椒鱼头",
+    "category_id": 6,
+    "description": "剁椒鲜辣、鱼肉细嫩，湘味名菜。",
+    "ingredients": [
+      {
+        "name": "胖头鱼头",
+        "qty": "1个"
+      },
+      {
+        "name": "剁椒",
+        "qty": "3勺"
+      },
+      {
+        "name": "姜蒜",
+        "qty": "适量"
+      },
+      {
+        "name": "蒸鱼豉油",
+        "qty": "2勺"
+      },
+      {
+        "name": "葱花",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鱼头剖开洗净，铺上剁椒、姜蒜。"
+      },
+      {
+        "description": "大火蒸12分钟。"
+      },
+      {
+        "description": "淋蒸鱼豉油、撒葱花，烧热油泼香。"
+      }
+    ],
+    "image": "duojiaoyutou.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "毛氏红烧肉",
+    "category_id": 6,
+    "description": "不加酱油、甜而不腻，湘式红烧肉。",
+    "ingredients": [
+      {
+        "name": "五花肉",
+        "qty": "500g"
+      },
+      {
+        "name": "冰糖",
+        "qty": "30g"
+      },
+      {
+        "name": "生抽",
+        "qty": "2勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "2勺"
+      },
+      {
+        "name": "姜",
+        "qty": "适量"
+      },
+      {
+        "name": "八角",
+        "qty": "2个"
+      }
+    ],
+    "directions": [
+      {
+        "description": "五花肉切块焯水。"
+      },
+      {
+        "description": "炒糖色，下肉块翻炒上色。"
+      },
+      {
+        "description": "加生抽、老抽、料酒、八角，小火炖40分钟收汁。"
+      }
+    ],
+    "image": "maoshihongshaorou.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "东安子鸡",
+    "category_id": 6,
+    "description": "酸辣鲜香、鸡肉嫩爽，湘南名菜。",
+    "ingredients": [
+      {
+        "name": "仔鸡",
+        "qty": "1只"
+      },
+      {
+        "name": "红椒",
+        "qty": "2个"
+      },
+      {
+        "name": "姜",
+        "qty": "适量"
+      },
+      {
+        "name": "醋",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "花椒",
+        "qty": "1小把"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鸡煮熟放凉，撕成条。"
+      },
+      {
+        "description": "热油爆香姜、红椒、花椒。"
+      },
+      {
+        "description": "下鸡条，加醋、生抽翻炒均匀。"
+      }
+    ],
+    "image": "donganziiji.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "臭鳜鱼",
+    "category_id": 7,
+    "description": "闻着臭吃着香，徽菜代表作。",
+    "ingredients": [
+      {
+        "name": "鳜鱼",
+        "qty": "1条"
+      },
+      {
+        "name": "臭豆豉",
+        "qty": "2勺"
+      },
+      {
+        "name": "姜蒜",
+        "qty": "适量"
+      },
+      {
+        "name": "干辣椒",
+        "qty": "5个"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鳜鱼用臭豆豉腌制发酵入味。"
+      },
+      {
+        "description": "煎鱼至两面金黄。"
+      },
+      {
+        "description": "加姜蒜、辣椒、生抽、料酒烧制收汁。"
+      }
+    ],
+    "image": "chouguiyu.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "黄山炖鸽",
+    "category_id": 7,
+    "description": "汤清味鲜、鸽肉酥烂，徽州滋补菜。",
+    "ingredients": [
+      {
+        "name": "鸽子",
+        "qty": "1只"
+      },
+      {
+        "name": "山药",
+        "qty": "1根"
+      },
+      {
+        "name": "枸杞",
+        "qty": "适量"
+      },
+      {
+        "name": "姜",
+        "qty": "适量"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鸽子焯水。"
+      },
+      {
+        "description": "加山药、姜、料酒炖1.5小时。"
+      },
+      {
+        "description": "加枸杞、盐再炖10分钟即可。"
+      }
+    ],
+    "image": "huangshandunge.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "糖醋鲤鱼",
+    "category_id": 8,
+    "description": "外焦里嫩、酸甜适口，鲁菜经典。",
+    "ingredients": [
+      {
+        "name": "鲤鱼",
+        "qty": "1条"
+      },
+      {
+        "name": "番茄酱",
+        "qty": "2勺"
+      },
+      {
+        "name": "糖",
+        "qty": "2勺"
+      },
+      {
+        "name": "醋",
+        "qty": "1.5勺"
+      },
+      {
+        "name": "淀粉",
+        "qty": "适量"
+      },
+      {
+        "name": "面粉",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鲤鱼改花刀，裹淀粉面粉炸至金黄酥脆。"
+      },
+      {
+        "description": "番茄酱、糖、醋煮成糖醋汁。"
+      },
+      {
+        "description": "将汁浇在鱼身上即可。"
+      }
+    ],
+    "image": "tangculiyu.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "九转大肠",
+    "category_id": 8,
+    "description": "酸甜苦辣咸五味俱全，鲁菜功夫菜。",
+    "ingredients": [
+      {
+        "name": "猪大肠",
+        "qty": "500g"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "老抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "醋",
+        "qty": "1勺"
+      },
+      {
+        "name": "糖",
+        "qty": "2勺"
+      },
+      {
+        "name": "料酒",
+        "qty": "1勺"
+      },
+      {
+        "name": "肉桂粉",
+        "qty": "适量"
+      },
+      {
+        "name": "葱姜蒜",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "大肠洗净焯水，煮至软切段，油炸。"
+      },
+      {
+        "description": "加生抽、老抽、醋、糖、料酒、肉桂粉烧制。"
+      },
+      {
+        "description": "收至浓稠裹匀即可。"
+      }
+    ],
+    "image": "jiuzhuandachang.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "葱烧海参",
+    "category_id": 8,
+    "description": "海参软糯、葱香浓郁，鲁菜高档菜。",
+    "ingredients": [
+      {
+        "name": "海参",
+        "qty": "4只"
+      },
+      {
+        "name": "大葱",
+        "qty": "3根"
+      },
+      {
+        "name": "生抽",
+        "qty": "2勺"
+      },
+      {
+        "name": "蚝油",
+        "qty": "1勺"
+      },
+      {
+        "name": "糖",
+        "qty": "1勺"
+      },
+      {
+        "name": "高汤",
+        "qty": "适量"
+      },
+      {
+        "name": "淀粉",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "海参泡发焯水；大葱切段炸至金黄。"
+      },
+      {
+        "description": "加高汤、生抽、蚝油、糖烧海参入味。"
+      },
+      {
+        "description": "勾芡收汁即可。"
+      }
+    ],
+    "image": "congshaohaishen.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "饺子",
+    "category_id": 8,
+    "description": "皮薄馅大、形态饱满，北方主食。",
+    "ingredients": [
+      {
+        "name": "面粉",
+        "qty": "300g"
+      },
+      {
+        "name": "猪肉糜",
+        "qty": "250g"
+      },
+      {
+        "name": "白菜",
+        "qty": "200g"
+      },
+      {
+        "name": "葱姜",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "香油",
+        "qty": "1勺"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "面粉加水揉成面团，醒发片刻。"
+      },
+      {
+        "description": "肉糜加白菜、葱姜、调料拌匀成馅。"
+      },
+      {
+        "description": "擀皮包馅，水开下饺煮至浮起即可。"
+      }
+    ],
+    "image": "jiaozi.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "小笼包",
+    "category_id": 3,
+    "description": "皮薄汤多、鲜美一口爆汁，江南名点。",
+    "ingredients": [
+      {
+        "name": "面粉",
+        "qty": "300g"
+      },
+      {
+        "name": "猪肉糜",
+        "qty": "250g"
+      },
+      {
+        "name": "皮冻",
+        "qty": "100g"
+      },
+      {
+        "name": "葱姜",
+        "qty": "适量"
+      },
+      {
+        "name": "生抽",
+        "qty": "1勺"
+      },
+      {
+        "name": "香油",
+        "qty": "1勺"
+      }
+    ],
+    "directions": [
+      {
+        "description": "面粉加酵母揉面，醒发。"
+      },
+      {
+        "description": "肉糜加皮冻、调料拌匀成馅。"
+      },
+      {
+        "description": "包入馅心，上笼大火蒸8分钟。"
+      }
+    ],
+    "image": "xiaolongbao.jpg",
+    "user_id": 1
+  },
+  {
+    "name": "蛋炒饭",
+    "category_id": 2,
+    "description": "粒粒分明、蛋香十足，家常快手饭。",
+    "ingredients": [
+      {
+        "name": "米饭",
+        "qty": "2碗"
+      },
+      {
+        "name": "鸡蛋",
+        "qty": "2个"
+      },
+      {
+        "name": "葱花",
+        "qty": "适量"
+      },
+      {
+        "name": "盐",
+        "qty": "适量"
+      },
+      {
+        "name": "油",
+        "qty": "适量"
+      }
+    ],
+    "directions": [
+      {
+        "description": "鸡蛋打散炒至凝固盛出。"
+      },
+      {
+        "description": "下米饭炒散，至粒粒分明。"
+      },
+      {
+        "description": "加炒蛋、盐、葱花炒匀即可。"
+      }
+    ],
+    "image": "danchaofan.jpg",
+    "user_id": 1
+  }
+]

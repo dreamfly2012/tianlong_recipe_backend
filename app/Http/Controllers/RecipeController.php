@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Models\RecipeIngredient;
-use App\Models\RecipeDirection;
+use App\Http\Helpers\ApiResponse;
+use App\Services\CosService;
+use App\Services\RecipeAiService;
 use App\Models\Recipe;
 use App\Models\RecipeCategory;
-use App\Http\Helpers\ApiResponse;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * @OA\Info(
@@ -20,12 +22,12 @@ use App\Http\Helpers\ApiResponse;
  *      title="天龙食谱 API 文档",
  *      description="天龙食谱后端 API 接口文档"
  * )
- * 
+ *
  * @OA\Server(
  *      url=L5_SWAGGER_CONST_HOST,
  *      description="API Server"
  * )
- * 
+ *
  * @OA\SecurityScheme(
  *      securityScheme="bearerAuth",
  *      type="http",
@@ -33,16 +35,22 @@ use App\Http\Helpers\ApiResponse;
  *      bearerFormat="JWT"
  * )
  */
-
 class RecipeController extends Controller
 {
+    /** 缓存有效期（秒） */
+    private const CACHE_TTL = 600;
+
     public function __construct()
     {
-        $this->middleware('auth:api')
-            ->except(['index', 'show', 'lists', 'info', 'category', 'search']);
+        $this->middleware('auth:sanctum')->except([
+            'index', 'show', 'lists', 'info', 'category', 'search',
+            'daily', 'ai', 'personalized', 'generate', 'create',
+        ]);
     }
 
     /**
+     * 获取食谱列表（支持按分类筛选）
+     *
      * @OA\Get(
      *      path="/api/recipe.lists",
      *      operationId="getRecipesList",
@@ -54,808 +62,762 @@ class RecipeController extends Controller
      *          description="分类ID",
      *          required=false,
      *          in="query",
-     *          @OA\Schema(
-     *              type="integer"
-     *          )
+     *          @OA\Schema(type="integer")
      *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="成功操作"
-     *       ),
-     *       @OA\Response(response=400, description="无效请求")
+     *      @OA\Response(response=200, description="成功操作"),
+     *      @OA\Response(response=400, description="无效请求")
      * )
      */
     public function lists(Request $request)
     {
-        $category_id = $request->get('id',  0);
+        $categoryId = (int) $request->get('id', 0);
+        $page = max(1, (int) $request->get('page', 1));
+        $key = 'recipes:list:'.($categoryId ?: 'all').':page:'.$page;
 
-        if(empty($category_id)){
-            $cacheRecipes = Redis::get('recipes');
-           
-            if ($cacheRecipes) {
-                $cacheRecipes = unserialize($cacheRecipes);
-                return $cacheRecipes;
-            } else {
-                $recipes = Recipe::orderBy('id', 'desc')->paginate();
-                
-                foreach ($recipes as $k => $v) {
-                    $cdn = getenv('COS_CDN');
-                    $recipes[$k]['image_src'] = $cdn . $v['image'];
-                }
-                $s_recipes = serialize($recipes);
-                Redis::setex('recipes', 600, $s_recipes);
-                $cacheRecipes = Redis::get('recipes');
-                return $recipes;
+        $data = $this->remember('recipes', $key, function () use ($categoryId) {
+            $query = Recipe::query();
+
+            if ($categoryId) {
+                $query->where('category_id', $categoryId);
             }
-        }else{
-            $cache_key = 'recipes:' . $category_id;
-            $cacheRecipes = Redis::get($cache_key);
-            if ($cacheRecipes) {
-                $cacheRecipes = unserialize($cacheRecipes);
-                return $cacheRecipes;
-            } else {
-                $recipes = Recipe::where('category_id', $category_id)->orderBy('id', 'desc')->paginate();
-                foreach ($recipes as $k => $v) {
-                    $cdn = getenv('COS_CDN');
-                    $recipes[$k]['image_src'] = $cdn . $v['image'];
-                }
-                $s_recipes = serialize($recipes);
-                Redis::setex($cache_key, 600, $s_recipes);
-                return $recipes;
-            }
-        }
-        
+
+            return $query->orderByDesc('id')->paginate()->toArray();
+        });
+
+        return ApiResponse::success($data, '获取食谱列表成功');
     }
 
-
-    //每日推荐
     /**
-     * @OA\Get(
-     *      path="/api/recipe.daily",
-     *      operationId="getDailyRecipes",
-     *      tags={"Recipes"},
-     *      summary="获取每日推荐食谱",
-     *      description="返回每日推荐的食谱列表",
-     *      @OA\Response(
-     *          response=200,
-     *          description="成功操作"
-     *       )
-     * )
+     * 每日推荐食谱
      */
     public function daily(Request $request)
     {
-        $recipes = Recipe::orderBy('id', 'desc')->paginate(15);
-        foreach ($recipes as $k => $v) {
-            $cdn = getenv('COS_CDN');
-            $recipes[$k]['image_src'] = $cdn . $v['image'];
-        }
-        return $recipes;
+        $recipes = Recipe::orderByDesc('id')->paginate(15);
+
+        return ApiResponse::success($recipes, '获取每日推荐食谱成功');
     }
 
-    //根据ai生成食谱
     /**
-     * @OA\Get(
-     *      path="/api/recipe.ai",
-     *      operationId="getAiRecipes",
-     *      tags={"Recipes"},
-     *      summary="获取AI生成的食谱",
-     *      description="返回由AI生成的食谱列表",
-     *      @OA\Response(
-     *          response=200,
-     *          description="成功操作"
-     *       )
-     * )
+     * AI 推荐食谱
      */
     public function ai(Request $request)
     {
-        $recipes = Recipe::orderBy('id', 'desc')->paginate(15);
-        foreach ($recipes as $k => $v) {
-            $cdn = getenv('COS_CDN');
-            $recipes[$k]['image_src'] = $cdn . $v['image'];
-        }
-        return $recipes;
+        $recipes = Recipe::orderByDesc('id')->paginate(15);
+
+        return ApiResponse::success($recipes, '获取AI推荐食谱成功');
     }
 
     /**
-     * @OA\Get(
-     *      path="/api/recipe.personalized",
-     *      operationId="getPersonalizedRecipes",
-     *      tags={"Recipes"},
-     *      summary="获取个性化推荐食谱",
-     *      description="返回根据用户偏好推荐的食谱列表",
-     *      @OA\Response(
-     *          response=200,
-     *          description="成功操作"
-     *       )
-     * )
+     * 个性化推荐食谱
      */
     public function personalized(Request $request)
     {
-        $recipes = Recipe::orderBy('id', 'desc')->paginate(2);
-        foreach ($recipes as $k => $v) {
-            $cdn = getenv('COS_CDN');
-            $recipes[$k]['image_src'] = $cdn . $v['image'];
-        }
-        return $recipes;
+        $recipes = Recipe::orderByDesc('id')->paginate(2);
+
+        return ApiResponse::success($recipes, '获取个性化推荐食谱成功');
     }
 
-
     /**
-     * @OA\Get(
-     *      path="/api/recipe.generate",
-     *      operationId="getGeneratedRecipes",
-     *      tags={"Recipes"},
-     *      summary="获取AI生成的食谱",
-     *      description="返回由AI生成的食谱列表",
-     *      @OA\Response(
-     *          response=200,
-     *          description="成功操作"
-     *       )
-     * )
+     * AI 生成食谱：调用大模型实时生成一份完整菜谱并落库为新记录。
+     *
+     * 可选请求参数：
+     *  - ingredients：指定食材（字符串或数组，如「土豆,辣椒」/["土豆","辣椒"]），将作为主料硬约束
+     *  - prompt：主题/风格要求（如「川味麻辣香锅」「少油清淡」）
      */
     public function generate(Request $request)
     {
-        // 获取请求中的数据
-        $ingredientsInput = $request->get('ingredientsInput', '');
-        $preferencesInput = $request->get('preferencesInput', '');
-        $excludesInput = $request->get('excludesInput', '');
-        
-        // 解析数据
-        $ingredients = explode(',', $ingredientsInput);
-        $ingredients = array_map('trim', $ingredients);
-        $ingredients = array_filter($ingredients);
-        
-        $preferences = explode(',', $preferencesInput);
-        $preferences = array_map('trim', $preferences);
-        $preferences = array_filter($preferences);
-        
-        $excludes = explode(',', $excludesInput);
-        $excludes = array_map('trim', $excludes);
-        $excludes = array_filter($excludes);
-        
-        // 如果有输入食材，根据食材查找菜谱，否则随机获取一条菜谱
-        if (!empty($ingredients)) {
-            // 这里应该实现AI生成菜谱的逻辑
-            // 目前暂时随机获取一条菜谱并携带制作步骤信息
-            $recipe = Recipe::with(['directions', 'ingredients'])->inRandomOrder()->first();
-        } else {
-            // 随机获取一条菜谱并携带制作步骤信息
-            $recipe = Recipe::with(['directions', 'ingredients'])->inRandomOrder()->first();
+        $prompt = (string) $request->get('prompt', '');
+        $ingredients = $request->get('ingredients');
+        if (is_array($ingredients)) {
+            $ingredients = implode('、', $ingredients);
         }
-        
-        // 如果没有找到菜谱，返回错误信息
-        if (!$recipe) {
-            return ApiResponse::notFound('未找到菜谱');
+        $ingredients = (string) $ingredients;
+
+        // 相同请求先查库：命中则直接返回，避免重复消耗大模型
+        $generateKey = $this->buildGenerateKey($ingredients, $prompt);
+        if ($generateKey !== '') {
+            $cached = Recipe::with(['directions', 'ingredients', 'category'])
+                ->where('ai_prompt', $generateKey)
+                ->first();
+            if ($cached) {
+                return ApiResponse::success($cached->toArray(), '已从已有生成中获取');
+            }
         }
-        
-        // 准备数据
-        $cdn = getenv('COS_CDN');
-        $recipeData = $recipe->toArray();
-        $recipeData['image_src'] = $cdn . $recipe->image;
-        
-        return ApiResponse::success($recipeData, '获取菜谱成功');
+
+        try {
+            $recipeData = app(RecipeAiService::class)->generate([
+                'ingredients' => $ingredients,
+                'prompt' => $prompt,
+            ]);
+        } catch (\RuntimeException $e) {
+            return ApiResponse::serverError('AI 生成失败：'.$e->getMessage());
+        }
+
+        // 分类：按名称精确匹配，不存在则新建顶级分类
+        $category = RecipeCategory::where('name', $recipeData['category'])->first()
+            ?? RecipeCategory::create([
+                'name' => $recipeData['category'],
+                'description' => '',
+                'parent_id' => 0,
+            ]);
+
+        // AI 生成内容归属到统一的「AI 生成」系统用户（user_id 不可空）
+        $aiUser = User::firstOrCreate(
+            ['email' => 'ai@tianlong.recipe'],
+            ['name' => 'AI 生成', 'password' => bcrypt(Str::random(32))]
+        );
+
+        // 按菜名从 Unsplash 自动配图（失败则留空，不影响主流程）
+        $image = $this->fetchAndStoreImage($recipeData['name']);
+
+        $recipe = Recipe::create([
+            'name' => $recipeData['name'],
+            'description' => $recipeData['description'],
+            'category_id' => $category->id,
+            'image' => $image ?? '',
+            'user_id' => $aiUser->id,
+            'ai_prompt' => $generateKey !== '' ? $generateKey : null,
+        ]);
+
+        $this->syncIngredients($recipe, $recipeData['ingredients']);
+        $this->syncDirections($recipe, $recipeData['directions']);
+        $this->clearRecipeCache();
+
+        return ApiResponse::success(
+            $recipe->load(['directions', 'ingredients', 'category'])->toArray(),
+            'AI 生成食谱成功',
+            201
+        );
     }
 
+    /**
+     * 构造生成请求的缓存键（食材 + 主题），用于复用判定与落库记录。
+     */
+    private function buildGenerateKey(string $ingredients, string $prompt): string
+    {
+        $parts = [];
+        if ($ingredients !== '') {
+            $parts[] = '食材:'.$ingredients;
+        }
+        if ($prompt !== '') {
+            $parts[] = '主题:'.$prompt;
+        }
+
+        return implode(' | ', $parts);
+    }
 
     /**
-     * @OA\Get(
-     *      path="/api/recipe.search",
-     *      operationId="searchRecipes",
-     *      tags={"Recipes"},
-     *      summary="搜索食谱",
-     *      description="根据名称搜索食谱",
-     *      @OA\Parameter(
-     *          name="name",
-     *          description="食谱名称",
-     *          required=true,
-     *          in="query",
-     *          @OA\Schema(
-     *              type="string"
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="成功操作"
-     *       ),
-     *       @OA\Response(response=400, description="无效请求")
-     * )
+     * 搜索食谱
      */
     public function search(Request $request)
     {
-        $name = $request->get('name');
-        
-        $recipes = Recipe::where('name','like', '%' . $name . '%')->orderby('id', 'desc')->paginate(15);
-        foreach ($recipes as $k => $v) {
-            $cdn = getenv('COS_CDN');
-            $recipes[$k]['image_src'] = $cdn . $v['image'];
-        }
-        return $recipes;
+        $name = (string) $request->get('name', '');
+
+        $recipes = Recipe::where('name', 'like', '%'.$name.'%')
+            ->orderByDesc('id')
+            ->paginate(15);
+
+        return ApiResponse::success($recipes, '搜索食谱成功');
     }
 
-
-
+    /**
+     * 获取食谱分类
+     */
     public function category(Request $request)
     {
-        $parent_id = $request->get('parent_id', 0);
+        $parentId = (int) $request->get('parent_id', 0);
+        $key = 'recipe_categories:parent:'.$parentId;
 
-        $cacheCategories = Redis::get('categories');
-        if($cacheCategories){
-            return ['msg'=>'分类信息', 'data'=>$cacheCategories,'code'=>0];
-        }else{
+        $data = $this->remember(
+            'recipe_categories',
+            $key,
+            fn () => RecipeCategory::where('parent_id', $parentId)->orderBy('id')->get()->toArray()
+        );
 
-            $categories = RecipeCategory::where('parent_id', $parent_id)->orderBy('id','asc')->get();
-            
-            Redis::setex('cacheCategories', 600, $categories);
-
-            return ['msg' => '分类信息','code'=>0, 'data' => $categories];
-        }
+        return ApiResponse::success($data, '分类信息');
     }
-
-
 
     /**
      * 获取食谱详情
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function info(Request $request)
     {
         $id = $request->get('id');
-        $cacheKey = 'recipe:'.$id;
-        
-        // 尝试从缓存获取
-        $cachedRecipe = Redis::get($cacheKey);
-        
-        if ($cachedRecipe) {
-            return ApiResponse::success(
-                json_decode($cachedRecipe, true),
-                '获取食谱详情成功'
-            );
+
+        if (! $id) {
+            return ApiResponse::validationError('参数 id 不能为空');
         }
-        
-        // 从数据库获取
-        $recipe = Recipe::where('id', $id)
-            ->with(['directions', 'ingredients'])
-            ->first();
-            
-        if (empty($recipe)) {
+
+        $data = $this->remember('recipes', 'recipe:'.$id, function () use ($id) {
+            $recipe = Recipe::with(['directions', 'ingredients', 'category'])->find($id);
+
+            return $recipe?->toArray();
+        });
+
+        if (! $data) {
             return ApiResponse::notFound('食谱不存在');
         }
-        
-        // 准备数据
-        $cdn = getenv('COS_CDN');
-        $recipeData = $recipe->toArray();
-        $recipeData['image_src'] = $cdn . $recipe->image;
-        
-        // 缓存数据（JSON 格式）
-        Redis::setex($cacheKey, 600, json_encode($recipeData));
-        
-        return ApiResponse::success($recipeData, '获取食谱详情成功');
+
+        return ApiResponse::success($data, '获取食谱详情成功');
     }
 
     /**
-     * 获取食谱列表
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * API 食谱列表（简单版本）
      */
     public function index()
     {
-        $recipes = Recipe::orderBy('created_at', 'desc')
-            ->get(['id', 'name', 'image']);
+        $recipes = Recipe::orderByDesc('created_at')->paginate(15);
 
         return ApiResponse::success($recipes, '获取食谱列表成功');
     }
 
     /**
-     * 获取创建表单数据
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * 获取创建表单初始数据
      */
     public function create()
     {
-        try {
-            $form = Recipe::form();
-            $categories = RecipeCategory::where('id', 0)->get();
-            
-            return ApiResponse::success([
-                'form' => $form,
-                'categories' => $categories,
-            ]);
-        } catch (\Exception $e) {
-            return ApiResponse::serverError($e->getMessage());
-        }
+        return ApiResponse::success([
+            'form' => Recipe::form(),
+            'categories' => RecipeCategory::orderBy('id')->get(),
+        ]);
     }
 
     /**
      * 创建新食谱
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-       
         $validated = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required|max:3000',
-            'image' => 'required|image',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'ingredients' => 'required|array|min:1',
             'ingredients.*.name' => 'required|max:255',
             'ingredients.*.qty' => 'required|max:255',
             'directions' => 'required|array|min:1',
             'directions.*.description' => 'required|max:3000',
-            'category_id' => 'required|exists:recipe_categories,id'
+            'category_id' => 'required|exists:recipe_categories,id',
         ]);
 
-        $ingredients = [];
-        foreach ($request->ingredients as $ingredient) {
-            $ingredients[] = new RecipeIngredient($ingredient);
+        $recipe = new Recipe([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'category_id' => $validated['category_id'],
+        ]);
+
+        if ($request->hasFile('image')) {
+            $recipe->image = $this->storeImage($request->file('image'));
         }
 
-        $directions = [];
-        foreach($request->directions as $direction) {
-            $directions[] = new RecipeDirection($direction);
-        }
-
-        if(!$request->hasFile('image') || !$request->file('image')->isValid()) {
-            return abort(404, 'Image not uploaded!');
-        }
-
-        $filename = $this->getFileName($request->image);
-        $FilePath = $request->image->getRealPath(); // 获取文件临时存放位置
-    
-        Storage::disk('cos')->put($filename, file_get_contents($FilePath)); // 存储文件
-        $request->image->move(base_path('public/images'), $filename);
-
-        $recipe = new Recipe($request->only('name', 'description', 'category_id'));
-        $recipe->image = $filename;
-        
         $request->user()->recipes()->save($recipe);
 
-        $recipe->ingredients()->saveMany($ingredients);
-        $recipe->directions()->saveMany($directions);
+        $this->syncIngredients($recipe, $validated['ingredients']);
+        $this->syncDirections($recipe, $validated['directions']);
 
-        return response()->json([
-            'saved' => true,
-            'id' => $recipe->id,
-            'message' => 'You have successfully created recipe!'
-        ]);
+        $this->clearRecipeCache();
+
+        return ApiResponse::success(['id' => $recipe->id], '食谱创建成功', 201);
     }
 
-    private function getFileName($file)
-    {
-    	return Str::random(32).'.'.$file->extension();
-    }
-
+    /**
+     * 获取食谱详情（资源路由 show）
+     */
     public function show($id)
     {
-        $recipe = Recipe::with(['user', 'ingredients', 'directions'])
-            ->findOrFail($id);
+        $recipe = Recipe::with(['user:id,name', 'category', 'ingredients', 'directions'])
+            ->find($id);
 
-        return response()
-            ->json([
-                'recipe' => $recipe
-            ]);
+        if (! $recipe) {
+            return ApiResponse::notFound('食谱不存在');
+        }
+
+        return ApiResponse::success($recipe, '获取食谱详情成功');
     }
 
-
+    /**
+     * 获取编辑表单数据
+     */
     public function edit($id, Request $request)
     {
-        $categories = RecipeCategory::where('id', 0)->get();
-        $form = $request->user()->recipes()
-            ->with(['ingredients' => function($query) {
-                $query->get(['id', 'name', 'qty']);
-            }, 'directions' => function($query) {
-                $query->get(['id', 'description']);
-            }])
-            ->findOrFail($id, [
-                'id', 'name', 'description', 'image'
-            ]);
+        $recipe = $request->user()->recipes()
+            ->with([
+                'ingredients' => fn ($q) => $q->select('id', 'recipe_id', 'name', 'qty'),
+                'directions' => fn ($q) => $q->select('id', 'recipe_id', 'description'),
+            ])
+            ->find($id, ['id', 'name', 'description', 'image', 'category_id']);
+
+        if (! $recipe) {
+            return ApiResponse::notFound('食谱不存在或无权编辑');
+        }
 
         return ApiResponse::success([
-            'form' => $form,
-            'categories' => $categories,
+            'form' => $recipe,
+            'categories' => RecipeCategory::orderBy('id')->get(),
         ]);
     }
 
-    public function update($id)
+    /**
+     * 更新食谱
+     */
+    public function update($id, Request $request)
     {
-        $request = request();
-        // dd($request->all());
-        $this->validate($request, [
+        $validated = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required|max:3000',
-            'image' => 'image',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'ingredients' => 'required|array|min:1',
-            'ingredients.*.id' => 'integer|exists:recipe_ingredients',
+            'ingredients.*.id' => 'nullable|integer|exists:recipe_ingredients,id',
             'ingredients.*.name' => 'required|max:255',
             'ingredients.*.qty' => 'required|max:255',
             'directions' => 'required|array|min:1',
-            'directions.*.id' => 'integer|exists:recipe_directions',
-            'directions.*.description' => 'required|max:3000'
+            'directions.*.id' => 'nullable|integer|exists:recipe_directions,id',
+            'directions.*.description' => 'required|max:3000',
+            'category_id' => 'required|exists:recipe_categories,id',
         ]);
 
-        $recipe = $request->user()->recipes()
-            ->findOrFail($id);
+        $recipe = $request->user()->recipes()->find($id);
 
-        $ingredients = [];
-        $ingredientsUpdated = [];
-
-        foreach($request->ingredients as $ingredient) {
-            if(isset($ingredient['id'])) {
-                RecipeIngredient::where('recipe_id', $recipe->id)
-                    ->where('id', $ingredient['id'])
-                    ->update($ingredient);
-
-                $ingredientsUpdated[] = $ingredient['id'];
-            } else {
-                $ingredients[] = new RecipeIngredient($ingredient);
-            }
+        if (! $recipe) {
+            return ApiResponse::notFound('食谱不存在或无权修改');
         }
 
-        $directions = [];
-        $directionsUpdated = [];
+        $recipe->name = $validated['name'];
+        $recipe->description = $validated['description'];
+        $recipe->category_id = $validated['category_id'];
 
-        foreach($request->directions as $direction) {
-            if(isset($direction['id'])) {
-                RecipeDirection::where('recipe_id', $recipe->id)
-                    ->where('id', $direction['id'])
-                    ->update($direction);
-
-                $directionsUpdated[] = $direction['id'];
-            } else {
-                $directions[] = new RecipeDirection($direction);
-            }
-
+        if ($request->hasFile('image')) {
+            $oldImage = $recipe->image;
+            $recipe->image = $this->storeImage($request->file('image'));
+            $this->deleteImage($oldImage);
         }
-
-        $recipe->name = $request->name;
-        $recipe->description = $request->description;
-        $recipe->category_id = $request->category_id;
-        
-
-        // upload image
-        if ($request->hasfile('image') && $request->file('image')->isValid()) {
-            $filename = $this->getFileName($request->image);
-            $request->image->move(base_path('/public/images'), $filename);
-
-            // remove old image
-            $FilePath = $request->image->getRealPath(); //获取文件临时存放位置
-            Storage::disk('cos')->put($filename, file_get_contents($FilePath)); //存储文件
-            File::delete(base_path('/public/images/'.$recipe->image));
-            $recipe->image = $filename;
-        }
-           
 
         $recipe->save();
 
-        RecipeIngredient::whereNotIn('id', $ingredientsUpdated)
-            ->where('recipe_id', $recipe->id)
-            ->delete();
+        $this->syncIngredients($recipe, $validated['ingredients']);
+        $this->syncDirections($recipe, $validated['directions']);
 
-        RecipeDirection::whereNotIn('id', $directionsUpdated)
-            ->where('recipe_id', $recipe->id)
-            ->delete();
+        $this->clearRecipeCache();
 
-        if(count($ingredients)) {
-            $recipe->ingredients()->saveMany($ingredients);
-        }
-
-        if(count($directions)) {
-            $recipe->directions()->saveMany($directions);
-        }
-
-        return ApiResponse::success(
-            ['id' => $recipe->id],
-                '食谱更新成功'
-            );
+        return ApiResponse::success(['id' => $recipe->id], '食谱更新成功');
     }
 
+    /**
+     * 删除食谱
+     */
     public function destroy($id, Request $request)
     {
-        $recipe = $request->user()->recipes()
-            ->findOrFail($id);
+        $recipe = $request->user()->recipes()->find($id);
 
-        RecipeIngredient::where('recipe_id', $recipe->id)
-            ->delete();
+        if (! $recipe) {
+            return ApiResponse::notFound('食谱不存在或无权删除');
+        }
 
-        RecipeDirection::where('recipe_id', $recipe->id)
-            ->delete();
-
-        // remove image
-        File::delete(base_path('/public/images/'.$recipe->image));
+        $recipe->ingredients()->delete();
+        $recipe->directions()->delete();
+        $this->deleteImage($recipe->image);
+        $recipe->favoritedBy()->detach();
 
         $recipe->delete();
 
-        return response()
-            ->json([
-                'deleted' => true
-            ]);
+        $this->clearRecipeCache();
+
+        return ApiResponse::success(null, '食谱删除成功');
     }
-    
+
     /**
      * 收藏食谱
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function favorite(Request $request)
     {
-        $recipeId = $request->get('recipe_id');
-        $user = $request->user();
-        
-        $recipe = Recipe::findOrFail($recipeId);
-        
-        if (!$user->favoriteRecipes->contains($recipeId)) {
-            $user->favoriteRecipes()->attach($recipeId);
-            return ApiResponse::success(null, '食谱已收藏');
-        }
-        
+        $data = $this->validateFavorite($request);
+
+        $request->user()->favoriteRecipes()->syncWithoutDetaching([$data['recipe_id']]);
+
         return ApiResponse::success(null, '食谱已收藏');
     }
-    
+
     /**
      * 取消收藏食谱
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function unfavorite(Request $request)
     {
-        $recipeId = $request->get('recipe_id');
-        $user = $request->user();
-        
-        $recipe = Recipe::findOrFail($recipeId);
-        
-        if ($user->favoriteRecipes->contains($recipeId)) {
-            $user->favoriteRecipes()->detach($recipeId);
-            return ApiResponse::success(null, '已取消收藏');
-        }
-        
+        $data = $this->validateFavorite($request);
+
+        $request->user()->favoriteRecipes()->detach($data['recipe_id']);
+
         return ApiResponse::success(null, '已取消收藏');
     }
 
     /**
-     * 判断用户是否收藏了该食谱
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * 判断是否已收藏
      */
     public function isFavorite(Request $request)
     {
-        $recipeId = $request->get('recipe_id');
-        $user = $request->user();
-        
-        $recipe = Recipe::findOrFail($recipeId);
-        
-        if ($user->favoriteRecipes->contains($recipeId)) {
-            return ApiResponse::success(['isFavorite' => true], '已收藏');
-        }
-        
-        return ApiResponse::success(['isFavorite' => false], '未收藏');
+        $data = $this->validateFavorite($request);
+
+        $isFavorite = $request->user()->favoriteRecipes()
+            ->whereKey($data['recipe_id'])
+            ->exists();
+
+        return ApiResponse::success(
+            ['isFavorite' => $isFavorite],
+            $isFavorite ? '已收藏' : '未收藏'
+        );
     }
+
     /**
-     * 获取用户收藏的食谱列表
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * 获取用户收藏列表
      */
     public function favoriteList(Request $request)
     {
-        $user = $request->user();
-        $recipes = $user->favoriteRecipes()
-            ->orderBy('recipe_user.created_at', 'desc')
+        $recipes = $request->user()->favoriteRecipes()
+            ->orderByPivot('created_at', 'desc')
             ->paginate(15);
-            
-        foreach ($recipes as $k => $v) {
-            $cdn = getenv('COS_CDN');
-            $recipes[$k]['image_src'] = $cdn . $v['image'];
-        }
-        
+
         return ApiResponse::success($recipes, '获取收藏列表成功');
-    }
-    
-    
-    public function upload(Request $request)
-    {
-        $file = $request->file('file');
-
-        if ($file->isValid()) { //括号里面的是必须加的哦
-            //如果括号里面的不加上的话，下面的方法也无法调用的
-
-            //获取文件的扩展名
-            $ext = $file->getClientOriginalExtension();
-
-            //获取文件的绝对路径
-            $path = $file->getRealPath();
-
-            //$path = 'http://ljfl.menghuiguli.cn/storage/2019-08-05-05-46-22.mp3';
-
-            $response = $this->sendvoice($path, 'mp3');
-
-            die(json_encode(array('code' => 0, 'msg' => 'success', 'data' => $response)));
-
-            return $response;
-
-            //定义文件名
-            //$filename = date('Y-m-d-h-i-s').'.'.$ext;
-
-            //存储文件。disk里面的public。总的来说，就是调用disk模块里的public配置
-            //Storage::disk('public')->put($filename, file_get_contents($path));
-        } else {
-            dump('error');
-        }
-
-    }
-
-    public function sendvoice($filepath, $VoiceFormat)
-    {
-        $secret_key = config('app.secretkey');
-        $query_arr = array();
-        $query_arr['Action'] = 'SentenceRecognition';
-        $query_arr['SecretId'] = config('app.secretid');
-        $query_arr['Timestamp'] = time();
-        $query_arr['Nonce'] = substr($query_arr['Timestamp'], 0, 4);
-        $query_arr['Version'] = '2018-05-22';
-        $query_arr['ProjectId'] = 0;
-        $query_arr['SubServiceType'] = 2;
-        $query_arr['EngSerViceType'] = '8k';
-        $query_arr['SourceType'] = 1;
-        if ($query_arr['SourceType'] == 0) {
-            $voice = $filepath;
-            $voice = urlencode($voice);
-            $query_arr['Url'] = $voice;
-        } else if ($query_arr['SourceType'] == 1) {
-            $file_path = $filepath;
-            if (file_exists($file_path)) {
-                //echo $file_path;
-                $handle = fopen($file_path, "rb");
-                $str = fread($handle, filesize($file_path));
-                fclose($handle);
-                $strlen = strlen($str);
-                $str = base64_encode($str);
-                $query_arr["Data"] = $str;
-                $query_arr["DataLen"] = $strlen;
-            } else {
-                return -3;
-            }
-        }
-        $query_arr['VoiceFormat'] = $VoiceFormat;
-        $query_arr['UsrAudioKey'] = $this->randstr(16);
-
-        ksort($query_arr);
-
-        $signStr = $this->formatSignString('aai.tencentcloudapi.com', '/', $query_arr, 'POST');
-
-        $sign = base64_encode(hash_hmac('sha1', $signStr, $secret_key, true));
-
-        $query_arr['Signature'] = $sign;
-
-        $url = 'https://aai.tencentcloudapi.com';
-        $headers = array("Host:aai.tencentcloudapi.com", "Content-Type:application/x-www-form-urlencoded", "charset=UTF-8");
-        $http_code = -1;
-        $rsp_str = "";
-        $starttime = time();
-        $ret = $this->http_curl_exec($url, $query_arr, $rsp_str, $http_code, 'POST', 10, array(), $headers);
-        //echo "ret : ".$ret."\n";
-        // echo "http_code : ".$http_code."\n";
-        // echo "rsp_str : ".$rsp_str."\n";
-
-        $info = json_decode($rsp_str, true);
-
-        $endtime = time();
-        $cost = $endtime - $starttime;
-
-        if (isset($info['Response']['Error'])) {
-            return $info['Response']['Error']['Message'];
-        } else {
-            return $info['Response']['Result'];
-        }
-        //echo "cost time: ".$cost."\n";
-
-    }
-
-    public function formatSignString($host, $uri, $param, $requestMethod)
-    {
-        $tmpParam = array();
-        ksort($param);
-        foreach ($param as $key => $value) {
-            array_push($tmpParam, str_replace("_", ".", $key) . "=" . $value);
-        }
-        $strParam = join("&", $tmpParam);
-        $signStr = strtoupper($requestMethod) . $host . $uri . "?" . $strParam;
-        return $signStr;
-    }
-
-    public function randstr($num)
-    {
-        $str = "QWERTYUIOPASDFGHJKLZXCVBNM1234567890qwertyuiopasdfghjklzxcvbnm";
-        str_shuffle($str);
-        $name = substr(str_shuffle($str), 26, $num);
-        return $name;
-    }
-
-    public function createSign($reqArr, $method, $domain, $path, $secretKey)
-    {
-        $signStr = "";
-        $signStr .= $method;
-        $signStr .= $domain;
-        $signStr .= $path;
-        $signStr .= $reqArr['appid'];
-        $signStr .= "?";
-
-        ksort($reqArr, SORT_STRING);
-
-        foreach ($reqArr as $key => $val) {
-            if ($key == "appid") {
-                continue;
-            }
-
-            $signStr .= $key . "=" . $val . "&";
-        }
-        $signStr = substr($signStr, 0, -1);
-        //echo "plainText : \n".$signStr."\n";
-
-        $signStr = base64_encode(hash_hmac('SHA1', $signStr, $secretKey, true));
-
-        return $signStr;
     }
 
     /**
-     * 判断参数，发出Http请求，成功则返回0，失败时返回负数。识别结果会赋值给$rsp_str变量。
+     * @return array{recipe_id: int}
      */
-    public function http_curl_exec($url, $data, &$rsp_str, &$http_code, $method = 'POST', $timeout = 10, $cookie = array(), $headers = array())
+    private function validateFavorite(Request $request): array
     {
-        $ch = curl_init();
-        if (!curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1)) {
-            return -1;
+        return $request->validate([
+            'recipe_id' => 'required|integer|exists:recipes,id',
+        ]);
+    }
+
+    /**
+     * 按关键词从 Unsplash 搜索美食图并保存到本地 images 磁盘（可选 COS）。
+     * 未配置 key 或任意环节失败都返回 null，由调用方决定是否兜底。
+     */
+    private function fetchAndStoreImage(string $query): ?string
+    {
+        try {
+            // 多图源候选：Pexels 优先（其 CDN 国内可达），Unsplash 次之
+            $candidates = array_merge(
+                $this->searchPexelsImages($query),
+                $this->searchUnsplashImages($query)
+            );
+
+            $contents = $candidates ? $this->downloadFirstImage($candidates) : null;
+
+            if ($contents !== null) {
+                $filename = Str::random(32).'.jpg';
+                Storage::disk('images')->put($filename, $contents);
+
+                if ($this->cosConfigured()) {
+                    app(CosService::class)->upload($filename, $contents);
+                }
+
+                return $filename;
+            }
+        } catch (\Throwable $e) {
+            Log::warning('[recipe.image] 自动配图失败：'.$e->getMessage());
         }
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        if (count($headers) > 0) {
-            if (!curl_setopt($ch, CURLOPT_HTTPHEADER, $headers)) {
-                return -1;
+
+        // 外部图源不可用（未配 key / 网络不通 / 下载失败）时退回本地图，保证前端有图
+        return $this->pickLocalImage($query);
+    }
+
+    /**
+     * 外部图源全部失败时的本地兜底：
+     * 先找库内同名/同关键词菜谱已有的图，再退回固定占位图。
+     */
+    private function pickLocalImage(string $query): ?string
+    {
+        if (! config('services.image.local_fallback', true)) {
+            return null;
+        }
+
+        $keywords = array_filter(
+            preg_split('/[\s,，、\/+和与]+/u', $query) ?: [],
+            fn ($k) => mb_strlen(trim($k)) >= 2
+        );
+        $keywords[] = trim($query);
+
+        foreach ($keywords as $keyword) {
+            $hit = Recipe::where('image', '!=', '')
+                ->where('name', 'like', '%'.trim($keyword).'%')
+                ->inRandomOrder()
+                ->value('image');
+
+            if ($hit) {
+                return $hit;
             }
         }
 
-        if ($method != 'GET') {
-            $data = is_array($data) ? http_build_query($data) : $data;
-            if (!curl_setopt($ch, CURLOPT_POSTFIELDS, $data)) {
-                echo 'http_curl_ex set postfields failed';
-                return -1;
+        return is_file(public_path('images/placeholder.jpg')) ? 'placeholder.jpg' : null;
+    }
+
+    /**
+     * Unsplash 搜索：返回若干候选图片地址（大图优先）。
+     * api.unsplash.com 偶发抖动，带一次重试。
+     */
+    private function searchUnsplashImages(string $query): array
+    {
+        $accessKey = (string) config('services.unsplash.access_key');
+
+        if ($accessKey === '' || Cache::get('img_source_down:unsplash')) {
+            return [];
+        }
+
+        try {
+            $search = Http::timeout((int) config('services.unsplash.timeout', 15))
+                ->retry(2, 500, throw: false)
+                ->withHeader('Authorization', 'Client-ID '.$accessKey)
+                ->get('https://api.unsplash.com/search/photos', [
+                    'query' => $query.' 美食',
+                    'per_page' => 3,
+                    'orientation' => 'landscape',
+                    'content_filter' => 'high',
+                ]);
+        } catch (\Throwable $e) {
+            $this->markSourceDown('unsplash');
+
+            return [];
+        }
+
+        if ($search->failed()) {
+            if ($search->status() !== 401) {
+                $this->markSourceDown('unsplash');
             }
-        } else {
-            $data = is_array($data) ? http_build_query($data) : $data;
-            echo 'data (GET method) : ' . $data . "\n";
-            if (strpos($url, '?') === false) {
-                $url .= '?';
+
+            return [];
+        }
+
+        $urls = [];
+        foreach ((array) $search->json('results', []) as $item) {
+            foreach (['regular', 'small'] as $size) {
+                if (! empty($item['urls'][$size])) {
+                    $urls[] = $item['urls'][$size];
+                }
+            }
+        }
+
+        return $urls;
+    }
+
+    /**
+     * Pexels 搜索（可选）：未配置 PEXELS_API_KEY 时直接跳过。
+     */
+    private function searchPexelsImages(string $query): array
+    {
+        $apiKey = (string) config('services.pexels.api_key');
+
+        if ($apiKey === '' || Cache::get('img_source_down:pexels')) {
+            return [];
+        }
+
+        try {
+            $search = Http::timeout((int) config('services.pexels.timeout', 20))
+                ->retry(2, 500, throw: false)
+                ->withHeaders(['Authorization' => $apiKey])
+                ->get('https://api.pexels.com/v1/search', [
+                    'query' => $query,
+                    'per_page' => 3,
+                    'orientation' => 'landscape',
+                ]);
+        } catch (\Throwable $e) {
+            $this->markSourceDown('pexels');
+
+            return [];
+        }
+
+        if ($search->failed()) {
+            if ($search->status() !== 401) {
+                $this->markSourceDown('pexels');
+            }
+
+            return [];
+        }
+
+        $urls = [];
+        foreach ((array) $search->json('photos', []) as $photo) {
+            if (! empty($photo['src']['large2x'])) {
+                $urls[] = $photo['src']['large2x'];
+            } elseif (! empty($photo['src']['large'])) {
+                $urls[] = $photo['src']['large'];
+            }
+        }
+
+        return $urls;
+    }
+
+    /**
+     * 标记某图源暂时不可用（10 分钟内跳过，避免每次生成都白等超时）。
+     */
+    private function markSourceDown(string $source): void
+    {
+        Cache::put('img_source_down:'.$source, true, now()->addMinutes(10));
+    }
+
+    /**
+     * 依次尝试下载候选图片：先直连原地址，失败则走配置的图片代理（应对 CDN 不可达）。
+     * 命中即返回二进制内容；全部失败返回 null。
+     */
+    private function downloadFirstImage(array $urls): ?string
+    {
+        $proxyTemplate = (string) config('services.unsplash.image_proxy', '');
+        $attempts = 0;
+
+        foreach (array_slice(array_unique($urls), 0, 4) as $url) {
+            $targets = [$url];
+
+            if ($proxyTemplate !== '' && str_contains($proxyTemplate, '{url}')) {
+                $targets[] = str_replace('{url}', rawurlencode($url), $proxyTemplate);
+            }
+
+            foreach ($targets as $target) {
+                // 控制总尝试次数，避免接口被拖太久
+                if ($attempts++ >= 4) {
+                    return null;
+                }
+
+                try {
+                    $response = Http::timeout(25)->get($target);
+                } catch (\Throwable $e) {
+                    continue;
+                }
+
+                $body = $response->body();
+
+                if ($response->failed() || strlen($body) < 5000) {
+                    continue;
+                }
+
+                if (! $this->looksLikeImage($response->header('Content-Type'), $body)) {
+                    continue;
+                }
+
+                return $body;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 粗略校验下载内容是图片而非错误页/HTML。
+     */
+    private function looksLikeImage(string $contentType, string $body): bool
+    {
+        if (str_starts_with(strtolower($contentType), 'image/')) {
+            return true;
+        }
+
+        return str_starts_with($body, "\xFF\xD8\xFF")   // JPEG
+            || str_starts_with($body, "\x89PNG")        // PNG
+            || str_starts_with($body, 'GIF8')           // GIF
+            || (str_starts_with($body, 'RIFF') && str_contains(substr($body, 0, 16), 'WEBP'));
+    }
+
+    /**
+     * 保存上传图片：始终写入本地 images 磁盘，配置了 COS 时同时上传。
+     */
+    private function storeImage(UploadedFile $file): string
+    {
+        $filename = Str::random(32).'.'.$file->extension();
+
+        Storage::disk('images')->putFileAs('', $file, $filename);
+
+        if ($this->cosConfigured()) {
+            app(CosService::class)->upload($filename, file_get_contents($file->getRealPath()));
+        }
+
+        return $filename;
+    }
+
+    private function deleteImage(?string $filename): void
+    {
+        if (empty($filename)) {
+            return;
+        }
+
+        Storage::disk('images')->delete($filename);
+
+        if ($this->cosConfigured()) {
+            app(CosService::class)->delete($filename);
+        }
+    }
+
+    private function cosConfigured(): bool
+    {
+        return app(CosService::class)->isConfigured();
+    }
+
+    /**
+     * 同步配料：新增 / 更新 / 删除本次未提交的旧数据。
+     */
+    private function syncIngredients(Recipe $recipe, array $items): void
+    {
+        $kept = [];
+
+        foreach ($items as $item) {
+            if (! empty($item['id'])) {
+                $ingredient = $recipe->ingredients()->find($item['id']);
+
+                if ($ingredient) {
+                    $ingredient->update(['name' => $item['name'], 'qty' => $item['qty']]);
+                    $kept[] = $ingredient->id;
+                }
             } else {
-                $url .= '&';
+                $kept[] = $recipe->ingredients()->create([
+                    'name' => $item['name'],
+                    'qty' => $item['qty'],
+                ])->id;
             }
-            $url .= $data;
         }
 
-        if (!curl_setopt($ch, CURLOPT_URL, $url)) {
-            return -1;
+        $recipe->ingredients()->whereNotIn('id', $kept)->delete();
+    }
+
+    /**
+     * 同步制作步骤：新增 / 更新 / 删除本次未提交的旧数据。
+     */
+    private function syncDirections(Recipe $recipe, array $items): void
+    {
+        $kept = [];
+
+        foreach ($items as $item) {
+            if (! empty($item['id'])) {
+                $direction = $recipe->directions()->find($item['id']);
+
+                if ($direction) {
+                    $direction->update(['description' => $item['description']]);
+                    $kept[] = $direction->id;
+                }
+            } else {
+                $kept[] = $recipe->directions()->create([
+                    'description' => $item['description'],
+                ])->id;
+            }
         }
 
-        if (!curl_setopt($ch, CURLOPT_TIMEOUT, $timeout)) {
-            return -1;
-        }
+        $recipe->directions()->whereNotIn('id', $kept)->delete();
+    }
 
-        if (!curl_setopt($ch, CURLOPT_HEADER, 0)) {
-            return -1;
+    /**
+     * 带标签的缓存读取，缓存不可用时直接回源。
+     */
+    private function remember(string $tag, string $key, callable $callback)
+    {
+        try {
+            return Cache::tags([$tag])->remember($key, self::CACHE_TTL, $callback);
+        } catch (\Throwable $e) {
+            return $callback();
         }
+    }
 
-        $rsp_str = curl_exec($ch);
-        if ($rsp_str === false) {
-            var_dump(curl_error($ch));
-            curl_close($ch);
-            return -2;
+    /**
+     * 清除食谱相关缓存。
+     */
+    private function clearRecipeCache(): void
+    {
+        try {
+            Cache::tags(['recipes'])->flush();
+        } catch (\Throwable $e) {
+            // 缓存不可用时无需处理
         }
-
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        return 0;
     }
 }

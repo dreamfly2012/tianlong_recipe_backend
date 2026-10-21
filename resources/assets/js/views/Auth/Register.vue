@@ -8,6 +8,10 @@
             <p class="mt-2 text-sm text-gray-500">Get started with your free account</p>
           </div>
 
+          <div v-if="error.general" class="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">
+            {{ error.general[0] }}
+          </div>
+
           <div class="space-y-2">
             <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
             <input
@@ -53,6 +57,7 @@
               class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
               placeholder="••••••••"
             >
+            <small class="text-red-500 text-sm" v-if="error.password_confirmation">{{ error.password_confirmation[0] }}</small>
           </div>
 
           <div>
@@ -87,23 +92,21 @@ import { useAuthStore } from '@/stores/auth'
         },
         methods: {
             async register() {
-              this.submitting = true
-              this.errors = {}
+              this.isProcessing = true
+              this.error = {}
 
               try {
-                // 移除组件内直接API调用
                 const authStore = useAuthStore()
                 await authStore.register(this.form)
-                
-                // 不需要手动跳转，store的register方法已包含router.push('/login')
+                this.$router.push('/recipes')
               } catch (error) {
-                if (error.response && error.response.status === 422) {
-                  this.errors = error.response.data.errors || {}
+                if (error.response?.status === 422) {
+                  this.error = error.response.data.errors || {}
                 } else {
-                  this.errors = { general: '注册失败，请检查您的信息或稍后再试。' }
+                  this.error = { general: [error.response?.data?.message || '注册失败，请检查您的信息或稍后再试。'] }
                 }
               } finally {
-                this.submitting = false
+                this.isProcessing = false
               }
             }
         }

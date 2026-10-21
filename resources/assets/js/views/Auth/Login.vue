@@ -23,7 +23,7 @@
                 placeholder="your.email@example.com"
               >
             </div>
-            <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
+            <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email[0] }}</p>
           </div>
 
           <!-- Password Input -->
@@ -44,11 +44,11 @@
                 placeholder="••••••••"
               >
             </div>
-            <p v-if="errors.password" class="mt-1 text-sm text-red-600">{{ errors.password }}</p>
+            <p v-if="errors.password" class="mt-1 text-sm text-red-600">{{ errors.password[0] }}</p>
           </div>
 
           <!-- Validation Errors Summary -->
-          <div v-if="Object.keys(errors).length > 0 && !(errors.email || errors.password)" class="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div v-if="generalErrors.length > 0" class="bg-red-50 border border-red-200 rounded-lg p-4">
             <div class="flex">
               <div class="flex-shrink-0">
                 <svg class="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,7 +58,9 @@
               <div class="ml-3">
                 <h3 class="text-sm font-medium text-red-800">登录失败</h3>
                 <div class="mt-2 text-sm text-red-700 space-y-1">
-                  <p v-for="(error, key) in errors" :key="key" v-if="!['email', 'password'].includes(key)">{{ error }}</p>
+                  <p v-for="item in generalErrors" :key="item.key">
+                    {{ item.message }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -101,15 +103,37 @@ export default {
       submitting: false
     }
   },
+  computed: {
+    generalErrors() {
+      return Object.entries(this.errors)
+        .filter(([key]) => !['email', 'password'].includes(key))
+        .map(([key, messages]) => ({
+          key,
+          message: Array.isArray(messages) ? messages[0] : messages
+        }))
+    }
+  },
   methods: {
     async handleSubmit() {
       this.submitting = true
-      // 移除直接API调用，改为调用store的login方法
+      this.errors = {}
+
+      try {
         const authStore = useAuthStore()
         await authStore.login(this.form)
+
+        const redirect = this.$route.query.redirect
+        this.$router.push(typeof redirect === 'string' && redirect.startsWith('/') ? redirect : '/recipes')
+      } catch (error) {
+        if (error.response?.status === 422) {
+          this.errors = error.response.data.errors || {}
+        } else {
+          this.errors = { general: [error.response?.data?.message || '登录失败，请稍后重试'] }
+        }
+      } finally {
+        this.submitting = false
+      }
     }
-        
-     
   }
 }
 </script>

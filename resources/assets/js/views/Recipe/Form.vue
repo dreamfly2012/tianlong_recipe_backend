@@ -200,16 +200,14 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { toMultipartedForm } from '@/helpers/form';
-
 import ImageUpload from '@/components/ImageUpload.vue';
 import api from '@/helpers/api';
-import Flash from '@/helpers/flash'; // 替换 useFlash 组合式函数
+import { useFlash } from '@/composables/useFlash';
 
-// 路由和导航
 const route = useRoute();
 const router = useRouter();
+const { showSuccess, showError } = useFlash();
 
-// 响应式状态
 const form = reactive({
   name: '',
   description: '',
@@ -219,56 +217,37 @@ const form = reactive({
   directions: []
 });
 
-const parent_categories = ref([]);
 const categories = ref([]);
 const error = ref({});
 const isProcessing = ref(false);
 const isLoading = ref(true);
-const action = ref('创建');
-const mode = route.meta.mode;
 
-// API URL
-const initializeURL = ref('/recipe.create');
-const storeURL = ref('/recipes');
-const categoryURL = '/recipe.category';
+const mode = route.meta.mode === 'edit' ? 'edit' : 'create';
+const action = ref(mode === 'edit' ? '更新' : '创建');
+const initializeURL = ref(mode === 'edit' ? `/recipes/${route.params.id}/edit` : '/recipe.create');
+const storeURL = ref(mode === 'edit' ? `/recipes/${route.params.id}` : '/recipes');
 
-
-// 初始化
 onMounted(async () => {
-  // 检查是否为编辑模式
-  if (mode === 'edit') {
-    initializeURL.value = `/recipes/${route.params.id}/edit`;
-    storeURL.value = `/recipes/${route.params.id}`;
-    action.value = '更新';
-  }
-
   try {
-    isLoading.value = true;
-    // 分开加载，这样一个失败不会影响另一个
-    try {
-      const recipeRes = await api.get(initializeURL.value);
-      Object.assign(form, recipeRes.data.data.form);
-      parent_categories.value = recipeRes.data.cateories || [];
-    } catch (err) {
-      console.error('加载菜谱数据失败:', err);
-      Flash.setError('加载菜谱数据失败');
+    const { data } = await api.get(initializeURL.value);
+    const payload = data.data || {};
+
+    Object.assign(form, payload.form || {});
+    categories.value = payload.categories || [];
+
+    if (!Array.isArray(form.ingredients) || form.ingredients.length === 0) {
+      form.ingredients = [{ name: '', qty: '' }];
     }
 
-    try {
-      const categoryRes = await api.get(`${categoryURL}`);
-      categories.value = categoryRes.data.data || [];
-      // 设置默认分类
-      if (categories.value.length > 0 && form.category_id === null) {
-        form.category_id = categories.value[0].id;
-      }
-    } catch (err) {
-      console.error('加载分类数据失败:', err);
-      Flash.setError('加载分类数据失败');
-      categories.value = [];
+    if (!Array.isArray(form.directions) || form.directions.length === 0) {
+      form.directions = [{ description: '' }];
     }
+
+    form.image = form.image || null;
+    form.category_id = form.category_id || categories.value[0]?.id || null;
   } catch (err) {
-    console.error('初始化失败:', err);
-    Flash.setError('页面加载失败，请重试');
+    console.error('初始化表单失败:', err);
+    showError('页面加载失败，请重试');
     router.push('/recipes');
   } finally {
     isLoading.value = false;
@@ -279,79 +258,73 @@ const save = async () => {
   isProcessing.value = true;
   error.value = {};
 
-  // 添加菜名验证
   if (!form.name.trim()) {
     error.value.name = ['菜名不能为空'];
     isProcessing.value = false;
-    return;  // 添加 return
+    return;
   }
 
-  // 添加数组字段验证
   if (form.ingredients.length === 0) {
     error.value.ingredients = ['请添加至少一种材料'];
     isProcessing.value = false;
-    return;  // 添加 return
-  } 
-  
+    return;
+  }
+
   if (form.ingredients.some(item => !item.name || !item.qty)) {
     error.value.ingredients = ['材料名称和用量不能为空'];
     isProcessing.value = false;
-    return;  // 添加 return
+    return;
   }
-  
+
   if (form.directions.length === 0) {
     error.value.directions = ['请添加至少一个步骤'];
     isProcessing.value = false;
-    return;  // 添加 return
-  } 
-  
+    return;
+  }
+
   if (form.directions.some(item => !item.description)) {
     error.value.directions = ['步骤描述不能为空'];
     isProcessing.value = false;
-    return;  // 添加 return
+    return;
   }
-  
-  // 添加基础验证
+
   if (!form.category_id) {
     error.value.category_id = ['请选择分类'];
     isProcessing.value = false;
-    return;  // 添加 return
+    return;
   }
-  
+
   if (!form.image && mode !== 'edit') {
     error.value.image = ['请上传图片'];
     isProcessing.value = false;
-    return;  // 添加 return
+    return;
   }
 
   try {
-    console.log('准备提交表单数据:', form);  // 添加调试日志
-    const formData = toMultipartedForm(form, mode);
-    console.log('转换后的 FormData:', formData);  // 添加调试日志
+    const payload = toMultipartedForm(form, mode);
 
-    if(mode==='edit') {
-      formData.append('_method', 'PUT');
+    if (mode === 'edit') {
+      payload.append('_method', 'PUT');
     }
-    
-    const res = await api.post(storeURL.value, formData);
-    console.log('服务器响应:', res);  // 添加调试日志
 
-    if (res.data.saved) {
-      Flash.setSuccess(res.data.message);
-      router.push(`/recipes/${res.data.id}`);
+    const { data } = await api.post(storeURL.value, payload);
+
+    if (data.code === 0) {
+      showSuccess(data.message || (mode === 'edit' ? '更新成功' : '创建成功'));
+      router.push(`/recipes/${data.data.id}`);
     }
   } catch (err) {
-    console.error('保存失败:', err);  // 添加错误日志
+    console.error('保存失败:', err);
+
     if (err.response?.status === 422) {
-      error.value = err.response.data;
+      error.value = err.response.data.errors || {};
     } else {
-      Flash.setError('操作失败，请重试');
+      showError(err.response?.data?.message || '操作失败，请重试');
     }
   } finally {
     isProcessing.value = false;
   }
 };
-
 
 const addDirection = () => {
   form.directions.push({ description: '' });

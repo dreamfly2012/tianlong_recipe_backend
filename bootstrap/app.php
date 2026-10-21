@@ -16,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
+        $middleware->throttleApi('api');
+
         $middleware->web(append: [
             HandleAppearance::class,
             AddLinkHeadersForPreloadedAssets::class,

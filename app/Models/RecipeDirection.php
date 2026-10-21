@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class RecipeDirection extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'description'
+        'recipe_id', 'description'
     ];
 
     public $timestamps = false;

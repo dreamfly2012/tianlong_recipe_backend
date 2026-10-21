@@ -4,8 +4,7 @@ import { useAuthStore } from '@/stores/auth'; // 添加导入
 const routes = [
     {
         path: '/',
-        name: 'home',
-        component: () => import('@/views/Home.vue')
+        redirect: { name: 'recipes' }
     },
     {
         path: '/login',

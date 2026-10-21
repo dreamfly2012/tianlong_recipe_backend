@@ -53,10 +53,6 @@ const authStore = useAuthStore();
 const auth = computed(() => authStore.isAuthenticated);
 const guest = computed(() => !auth.value);
 
-console.log('Auth value:', auth.value);
-console.log('Guest value:', guest.value);
-console.log('User data:', authStore.user);
-
 const logout = async () => {
   try {
     await authStore.logout();

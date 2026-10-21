@@ -25,13 +25,13 @@ class ApiResponse
      * @param string $message 提示信息
      * @return JsonResponse
      */
-    public static function success($data = null, string $message = '操作成功'): JsonResponse
+    public static function success($data = null, string $message = '操作成功', int $httpCode = Response::HTTP_OK): JsonResponse
     {
         return response()->json([
             'code' => self::CODE_SUCCESS,
             'message' => $message,
             'data' => $data
-        ], Response::HTTP_OK);
+        ], $httpCode);
     }
 
     /**

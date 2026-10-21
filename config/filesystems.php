@@ -45,6 +45,14 @@ return [
             'report' => false,
         ],
 
+        'images' => [
+            'driver' => 'local',
+            'root' => public_path('images'),
+            'url' => env('APP_URL').'/images',
+            'throw' => false,
+            'report' => false,
+        ],
+
         'cos' => [
             'driver' => 'cos',
 

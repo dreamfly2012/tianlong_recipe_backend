@@ -1,48 +1,94 @@
+import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
 import api from '@/helpers/api';
 import { useFlash } from '@/composables/useFlash';
 
-interface User {
+export interface AuthUser {
   id: number;
   name: string;
   email: string;
+  is_admin?: boolean;
   api_token?: string;
-  is_admin: boolean;
+  [key: string]: unknown;
+}
+
+interface AuthPayload {
+  user: AuthUser;
+  api_token: string;
+  token: string;
 }
 
 export const useAuthStore = defineStore('auth', () => {
-  const router = useRouter();
   const { showSuccess, showError } = useFlash();
 
-  const user = ref<User | null>(null);
+  const user = ref<AuthUser | null>(null);
   const isLoading = ref(false);
 
-  const isAuthenticated = computed(() => !!user.value?.api_token);
+  const isAuthenticated = computed(() => Boolean(user.value?.api_token));
+
+  const setAuthHeader = (token?: string) => {
+    if (token) {
+      api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    } else {
+      delete api.defaults.headers.common.Authorization;
+    }
+  };
+
+  const setUser = (userData: AuthUser, token?: string) => {
+    const storedUser: AuthUser = {
+      ...userData,
+      api_token: token ?? userData.api_token,
+    };
+
+    user.value = storedUser;
+    localStorage.setItem('user', JSON.stringify(storedUser));
+    setAuthHeader(storedUser.api_token);
+  };
+
+  const clearUser = () => {
+    user.value = null;
+    localStorage.removeItem('user');
+    setAuthHeader(undefined);
+  };
 
   const initialize = () => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     try {
       const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        user.value = JSON.parse(storedUser);
+      if (!storedUser) {
+        return;
       }
+
+      const parsed = JSON.parse(storedUser) as AuthUser;
+
+      if (!parsed?.api_token) {
+        localStorage.removeItem('user');
+        return;
+      }
+
+      user.value = parsed;
+      setAuthHeader(parsed.api_token);
     } catch (error) {
       console.error('Failed to initialize auth:', error);
       localStorage.removeItem('user');
     }
   };
 
-  const login = async (credentials: { email: string; password: string }) => {
+  const login = async (credentials: { email: string; password: string }): Promise<AuthPayload> => {
     try {
       isLoading.value = true;
       const response = await api.post('/login', credentials);
-      setUser(response.data);
-      showSuccess('Login successful');
-      router.push('/recipes');
-      return true;
+      const payload = response.data?.data as AuthPayload;
+
+      setUser(payload.user, payload.api_token);
+      showSuccess(response.data?.message || '登录成功');
+
+      return payload;
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Login failed';
+      const message = error.response?.data?.message || '登录失败';
       showError(message);
       throw error;
     } finally {
@@ -50,16 +96,23 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
-  const register = async (userData: { name: string; email: string; password: string }) => {
+  const register = async (userData: {
+    name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+  }): Promise<AuthPayload> => {
     try {
       isLoading.value = true;
       const response = await api.post('/register', userData);
-      setUser(response.data);
-      showSuccess('Registration successful');
-      router.push('/login');
-      return true;
+      const payload = response.data?.data as AuthPayload;
+
+      setUser(payload.user, payload.api_token);
+      showSuccess(response.data?.message || '注册成功');
+
+      return payload;
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Registration failed';
+      const message = error.response?.data?.message || '注册失败';
       showError(message);
       throw error;
     } finally {
@@ -70,38 +123,16 @@ export const useAuthStore = defineStore('auth', () => {
   const logout = async () => {
     try {
       await api.post('/logout');
-      showSuccess('Logged out successfully');
     } catch (error) {
       console.error('Logout error:', error);
-      showError('Failed to logout properly');
     } finally {
       clearUser();
-      router.push('/login');
+      showSuccess('已退出登录');
     }
   };
 
-  const setUser = (userData: User) => {
-    user.value = userData;
-    localStorage.setItem('user', JSON.stringify(userData));
-    setAuthHeader(userData.api_token);
-  };
-
-  const clearUser = () => {
-    user.value = null;
-    localStorage.removeItem('user');
-    delete api.defaults.headers.common['Authorization'];
-  };
-
-  const setAuthHeader = (token?: string) => {
-    if (token) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    }
-  };
-
-  // Initialize auth state
-  if (typeof window !== 'undefined') {
-    initialize();
-  }
+  // 应用启动时从 localStorage 恢复登录态
+  initialize();
 
   return {
     user,
@@ -110,6 +141,8 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     register,
     logout,
-    initialize
+    initialize,
+    setUser,
+    clearUser,
   };
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Helpers\ApiResponse;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -108,68 +109,65 @@ class AuthController extends Controller
 {
 	public function __construct()
 	{
-	    //$this->middleware('auth:api')->only('logout');
+        $this->middleware('auth:sanctum')->only('logout');
 	}
 
     public function register(Request $request)
     {
-        $this->validate($request, [
+        $data = $this->validate($request, [
             'name' => 'required|max:255',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|between:6,25|confirmed'
         ]);
 
-        $user = new User($request->all());
-        $user->password = bcrypt($request->password);
-        $user->save();
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+        ]);
 
-        return response()
-            ->json([
-                'registered' => true
-            ]);
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        return ApiResponse::success([
+            'registered' => true,
+            'api_token' => $token,
+            'token' => $token,
+            'user' => $user,
+        ], '注册成功', 201);
     }
 
     public function login(Request $request)
     {
-        $this->validate($request, [
+        $data = $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required|between:6,25'
         ]);
 
-        $user = User::where('email', $request->email)
-            ->first();
+        $user = User::where('email', $data['email'])->first();
 
-        if($user && Hash::check($request->password, $user->password)) {
-              // 生成 Sanctum token
-            $token = $user->createToken('api-token')->plainTextToken;
-
-            return response()
-                ->json([
-                    'authenticated' => true,
-                    'api_token' => $token,
-                    'user_id' => $user->id,
-                    'is_admin' => $user->is_admin,
-                    'name' => $user->name,
-                ]);
+        if (! $user || ! Hash::check($data['password'], $user->password)) {
+            return ApiResponse::error('邮箱或密码不正确', ApiResponse::CODE_ERROR, 422);
         }
 
-        return response()
-            ->json([
-                'errors' => [
-                    'email' => ['Provided email and password does not match!']
-                ]
-            ], 422);
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        return ApiResponse::success([
+            'authenticated' => true,
+            'api_token' => $token,
+            'token' => $token,
+            'user' => $user,
+        ], '登录成功');
     }
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $token = $request->user()->currentAccessToken();
 
+        if ($token && method_exists($token, 'delete')) {
+            $token->delete();
+        }
 
-        return response()
-            ->json([
-                'done' => true
-            ]);
+        return ApiResponse::success(['done' => true], '已退出登录');
     }
 
     /**
@@ -180,59 +178,54 @@ class AuthController extends Controller
      */
     public function wechatLogin(Request $request)
     {
-        $this->validate($request, [
+        $data = $this->validate($request, [
             'code' => 'required|string',
             'user_info' => 'array'
         ]);
 
-        // 获取微信配置
-        $appid = env('WECHAT_MINIPROGRAM_APPID');
-        $secret = env('WECHAT_MINIPROGRAM_SECRET');
-        
-        // 如果配置不存在，则使用模拟数据
+        $appid = config('services.wechat_miniprogram.appid');
+        $secret = config('services.wechat_miniprogram.secret');
+
+        // 未配置微信时使用模拟数据，便于本地开发和测试
         if (empty($appid) || empty($secret)) {
-            // 模拟微信返回的数据
             $wechatUser = [
-                'openid' => 'mock_openid_' . Str::random(10),
-                'unionid' => 'mock_unionid_' . Str::random(10),
+                'openid' => 'mock_openid_'.Str::random(10),
+                'unionid' => 'mock_unionid_'.Str::random(10),
                 'session_key' => Str::random(20)
             ];
         } else {
-            // 调用微信接口验证code并获取openid
-            $url = "https://api.weixin.qq.com/sns/jscode2session?appid={$appid}&secret={$secret}&js_code={$request->code}&grant_type=authorization_code";
-            
             try {
-                // 使用Http客户端并配置SSL选项
                 $response = Http::withOptions([
-                    'verify' => false // 在开发环境中禁用SSL验证，生产环境中应配置正确的证书
-                ])->get($url);
-                
+                    'verify' => base_path('resources/certs/cacert.pem'),
+                ])->get('https://api.weixin.qq.com/sns/jscode2session', [
+                    'appid' => $appid,
+                    'secret' => $secret,
+                    'js_code' => $data['code'],
+                    'grant_type' => 'authorization_code',
+                ]);
+
                 $wechatUser = $response->json();
-                
+
                 if (isset($wechatUser['errcode'])) {
-                    return response()->json([
-                        'authenticated' => false,
-                        'message' => '微信登录失败: ' . $wechatUser['errmsg']
-                    ], 401);
+                    return ApiResponse::error(
+                        '微信登录失败: '.($wechatUser['errmsg'] ?? '未知错误'),
+                        ApiResponse::CODE_UNAUTHORIZED,
+                        401
+                    );
                 }
             } catch (\Exception $e) {
-                return response()->json([
-                    'authenticated' => false,
-                    'message' => '微信登录失败: ' . $e->getMessage()
-                ], 500);
+                return ApiResponse::serverError('微信登录失败: '.$e->getMessage());
             }
         }
 
-        // 查找用户是否已存在
         $user = User::where('wechat_openid', $wechatUser['openid'])->first();
 
-        // 如果用户不存在，则创建新用户
-        if (!$user) {
+        if (! $user) {
             $userInfo = $request->input('user_info', []);
             $user = User::create([
                 'name' => $userInfo['nickName'] ?? '微信用户',
-                'email' => 'wechat_' . $wechatUser['openid'] . '@example.com',
-                'password' => bcrypt(Str::random(32)), // 生成随机密码
+                'email' => 'wechat_'.$wechatUser['openid'].'@example.com',
+                'password' => Str::random(32),
                 'wechat_openid' => $wechatUser['openid'],
                 'wechat_unionid' => $wechatUser['unionid'] ?? null,
                 'wechat_avatar' => $userInfo['avatarUrl'] ?? null,
@@ -240,13 +233,13 @@ class AuthController extends Controller
             ]);
         }
 
-        // 生成 Sanctum token
         $token = $user->createToken('wechat-token')->plainTextToken;
 
-        return response()->json([
+        return ApiResponse::success([
             'authenticated' => true,
+            'api_token' => $token,
             'token' => $token,
-            'user' => $user
-        ]);
+            'user' => $user,
+        ], '登录成功');
     }
 }

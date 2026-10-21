@@ -63,6 +63,17 @@ class ModelTest extends TestCase
         $this->assertEquals($category->id, $recipe->category_id);
     }
 
+    public function test_recipe_can_be_favorited_by_users(): void
+    {
+        $recipe = Recipe::factory()->create();
+        $user = User::factory()->create();
+
+        $recipe->favoritedBy()->attach($user->id);
+
+        $this->assertTrue($recipe->favoritedBy->contains($user));
+        $this->assertSame(1, $recipe->favoritedBy()->count());
+    }
+
     public function test_recipe_form_returns_default_data(): void
     {
         $form = Recipe::form();

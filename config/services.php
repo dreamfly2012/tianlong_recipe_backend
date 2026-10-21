@@ -69,4 +69,10 @@ return [
         'local_fallback' => env('IMAGE_LOCAL_FALLBACK', true),
     ],
 
+    // Bing 图片搜索（cn.bing.com 静态页抓取，无需 API key），AI 生成菜谱时按菜名自动配图（优先于 Pexels/Unsplash）
+    'bing' => [
+        'enabled' => env('BING_IMAGE_ENABLED', true),
+        'timeout' => env('BING_TIMEOUT', 20),
+    ],
+
 ];

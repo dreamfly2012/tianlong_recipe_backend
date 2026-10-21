@@ -22,7 +22,8 @@ RUN docker-php-ext-install \
     zip \
     pdo \
     gd \
-    opcache 
+    opcache \
+    fileinfo
 
 RUN    rm -rf /var/lib/apt/lists/*
 

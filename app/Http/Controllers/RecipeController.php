@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helpers\ApiResponse;
+use App\Services\BingImageService;
 use App\Services\CosService;
 use App\Services\RecipeAiService;
 use App\Models\Recipe;
@@ -488,17 +489,22 @@ class RecipeController extends Controller
     }
 
     /**
-     * 按关键词从 Unsplash 搜索美食图并保存到本地 images 磁盘（可选 COS）。
-     * 未配置 key 或任意环节失败都返回 null，由调用方决定是否兜底。
+     * 按关键词自动配图并保存到本地 images 磁盘（可选 COS）。
+     * 优先 Bing 搜索（中文菜名更准），无候选时回退 Pexels/Unsplash，
+     * 再失败退回本地图（库内同名菜谱图 / placeholder.jpg）。
      */
     private function fetchAndStoreImage(string $query): ?string
     {
         try {
-            // 多图源候选：Pexels 优先（其 CDN 国内可达），Unsplash 次之
-            $candidates = array_merge(
-                $this->searchPexelsImages($query),
-                $this->searchUnsplashImages($query)
-            );
+            // 优先用 Bing 搜图（中文菜名更准），未拿到候选再回退 Pexels/Unsplash
+            $candidates = app(BingImageService::class)->search($query, 8);
+
+            if (empty($candidates)) {
+                $candidates = array_merge(
+                    $this->searchPexelsImages($query),
+                    $this->searchUnsplashImages($query)
+                );
+            }
 
             $contents = $candidates ? $this->downloadFirstImage($candidates) : null;
 

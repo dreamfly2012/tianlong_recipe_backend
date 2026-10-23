@@ -9,6 +9,8 @@ Route::get('recipe.lists', [RecipeController::class, 'lists']);
 Route::get('recipe.info', [RecipeController::class, 'info']);
 Route::get('recipe.category', [RecipeController::class, 'category']);
 Route::get('recipe.search', [RecipeController::class, 'search']);
+Route::get('recipe.hotSearch', [RecipeController::class, 'hotSearch']);
+Route::get('recipe.suggest', [RecipeController::class, 'suggest']);
 Route::get('recipe.create', [RecipeController::class, 'create']);
 Route::get('recipe.favourites', [RecipeController::class, 'favoriteList']);
 Route::get('recipe.favourite', [RecipeController::class, 'favorite']);

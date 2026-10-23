@@ -46,6 +46,7 @@ class RecipeController extends Controller
         $this->middleware('auth:sanctum')->except([
             'index', 'show', 'lists', 'info', 'category', 'search',
             'daily', 'ai', 'personalized', 'generate', 'create',
+            'hotSearch', 'suggest',
         ]);
     }
 
@@ -220,6 +221,59 @@ class RecipeController extends Controller
         }
 
         return implode(' | ', $parts);
+    }
+
+    /**
+     * 搜索联想：返回匹配菜名的简短列表（无需鉴权）
+     */
+    public function suggest(Request $request)
+    {
+        $keyword = trim((string) $request->get('keyword', ''));
+        $limit = min(max((int) $request->get('limit', 8), 1), 20);
+
+        if ($keyword === '') {
+            return ApiResponse::success([], 'success');
+        }
+
+        $escaped = addcslashes($keyword, '%_\\');
+        $key = 'recipe:suggest:'.md5($keyword.':'.$limit);
+
+        $data = $this->remember('recipes', $key, function () use ($escaped, $limit) {
+            $names = Recipe::query()
+                ->where('name', 'like', "%{$escaped}%")
+                ->orderByRaw('name like ? desc', ["{$escaped}%"])
+                ->orderByDesc('id')
+                ->limit($limit * 3)          // 多取一些再 unique，避免前缀分组不够
+                ->pluck('name')
+                ->unique()
+                ->values();
+
+            return $names->take($limit)->map(fn ($name) => ['name' => $name])->toArray();
+        });
+
+        return ApiResponse::success($data, 'success');
+    }
+
+    /**
+     * 热门搜索词：返回近期发布菜谱名称的字符串数组（无需鉴权）
+     */
+    public function hotSearch(Request $request)
+    {
+        $limit = min(max((int) $request->get('limit', 8), 1), 20);
+        $key = 'recipe:hotSearch:'.$limit;
+
+        $data = $this->remember('recipes', $key, function () use ($limit) {
+            return Recipe::query()
+                ->whereNotNull('name')
+                ->where('name', '!=', '')
+                ->orderByDesc('id')
+                ->distinct()
+                ->pluck('name')
+                ->take($limit)
+                ->toArray();
+        });
+
+        return ApiResponse::success($data, 'success');
     }
 
     /**

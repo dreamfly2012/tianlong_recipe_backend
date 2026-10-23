@@ -151,6 +151,114 @@ class RecipeApiTest extends TestCase
             ->assertJsonPath('data.total', 0);
     }
 
+    // ========== 热门搜索词 ==========
+
+    public function test_hot_search_returns_string_array(): void
+    {
+        $response = $this->getJson('/api/recipe.hotSearch?limit=5');
+
+        $response->assertStatus(200);
+        $data = $response->json('data');
+        $this->assertIsArray($data);
+        $this->assertLessThanOrEqual(5, count($data));
+        foreach ($data as $item) {
+            $this->assertIsString($item);
+        }
+    }
+
+    public function test_hot_search_respects_limit_range(): void
+    {
+        // limit 超出范围会被 clamp 到 1～20
+        $response = $this->getJson('/api/recipe.hotSearch?limit=0');
+        $this->assertEquals(1, count($response->json('data')));
+
+        $response2 = $this->getJson('/api/recipe.hotSearch?limit=999');
+        $this->assertLessThanOrEqual(20, count($response2->json('data')));
+    }
+
+    public function test_hot_search_returns_empty_when_no_recipes(): void
+    {
+        Recipe::query()->delete();
+        $this->assertDatabaseEmpty('recipes');
+
+        $response = $this->getJson('/api/recipe.hotSearch');
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('code', 0)
+            ->assertJsonPath('data', []);
+    }
+
+    // ========== 搜索联想 ==========
+
+    public function test_suggest_returns_matching_names(): void
+    {
+        $response = $this->getJson('/api/recipe.suggest?keyword=番茄&limit=5');
+
+        $response->assertStatus(200);
+        $data = $response->json('data');
+        $this->assertIsArray($data);
+        $this->assertGreaterThanOrEqual(1, count($data));
+        foreach ($data as $item) {
+            $this->assertArrayHasKey('name', $item);
+            $this->assertStringContainsString('番茄', $item['name']);
+        }
+    }
+
+    public function test_suggest_prioritizes_prefix_match(): void
+    {
+        // 创建前缀匹配和包含匹配各一条
+        \App\Models\Recipe::create(['name' => '番茄炒蛋', 'description' => 'd', 'image' => 'x.jpg', 'category_id' => $this->category->id, 'user_id' => $this->admin->id]);
+        \App\Models\Recipe::create(['name' => '西红柿番茄汤', 'description' => 'd', 'image' => 'x.jpg', 'category_id' => $this->category->id, 'user_id' => $this->admin->id]);
+
+        $response = $this->getJson('/api/recipe.suggest?keyword=番茄&limit=10');
+        $names = array_column($response->json('data'), 'name');
+
+        $this->assertCount(2, $names);
+        // 前缀匹配（番茄炒蛋）应排在包含匹配前面
+        $this->assertEquals('番茄炒蛋', $names[0]);
+    }
+
+    public function test_suggest_empty_keyword_returns_empty_array(): void
+    {
+        $response = $this->getJson('/api/recipe.suggest?keyword=');
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('code', 0)
+            ->assertJsonPath('data', []);
+
+        $response2 = $this->getJson('/api/recipe.suggest?keyword=%20%20');
+        $response2
+            ->assertStatus(200)
+            ->assertJsonPath('code', 0)
+            ->assertJsonPath('data', []);
+    }
+
+    public function test_suggest_escapes_wildcards(): void
+    {
+        // 用户输入 % 或 _ 不应触发 SQL LIKE 通配符，返回空结果
+        $response = $this->getJson('/api/recipe.suggest?keyword=%');
+        $response
+            ->assertStatus(200)
+            ->assertJsonPath('code', 0)
+            ->assertJsonPath('data', []);
+    }
+
+    public function test_suggest_respects_limit(): void
+    {
+        for ($i = 0; $i < 5; $i++) {
+            \App\Models\Recipe::create([
+                'name' => '宫保豆腐'.$i,
+                'description' => 'd',
+                'image' => 'x.jpg',
+                'category_id' => $this->category->id,
+                'user_id' => $this->admin->id,
+            ]);
+        }
+
+        $response = $this->getJson('/api/recipe.suggest?keyword=宫保&limit=3');
+        $this->assertLessThanOrEqual(3, count($response->json('data')));
+    }
+
     // ========== 食谱详情 ==========
 
     public function test_can_get_recipe_info(): void

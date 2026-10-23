@@ -34,3 +34,6 @@ pnpm-lock.yaml
 .workbuddy/
 /storage/logs/*.log
 /release
+
+# FTP 上传凭据（不入库、不入包）
+/deploy/ftp.env

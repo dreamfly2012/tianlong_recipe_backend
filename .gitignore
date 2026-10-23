@@ -14,6 +14,9 @@
 .env.production
 .phpactor.json
 .phpunit.result.cache
+AGENT.md
+CLUADE.md
+deploy/
 Homestead.json
 Homestead.yaml
 npm-debug.log

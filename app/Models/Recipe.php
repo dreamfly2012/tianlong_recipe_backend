@@ -11,7 +11,8 @@ class Recipe extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'description', 'image', 'category_id', 'user_id', 'ai_prompt'
+        'name', 'description', 'image', 'category_id', 'user_id', 'ai_prompt',
+        'cooking_time', 'difficulty', 'tags',
     ];
 
     /**

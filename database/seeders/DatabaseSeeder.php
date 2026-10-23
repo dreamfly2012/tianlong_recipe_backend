@@ -17,5 +17,8 @@ class DatabaseSeeder extends Seeder
             RecipeCategoriesTableSeeder::class,
             RecipesTableSeeder::class,
         ]);
+
+        // 为已有菜谱填充 cooking_time / difficulty / tags（幂等）
+        $this->call(FillRecipeMetaFieldsSeeder::class);
     }
 }

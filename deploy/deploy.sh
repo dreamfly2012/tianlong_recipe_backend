@@ -146,6 +146,10 @@ else
   warn "跳过 migrate（数据库需为服务器上已存在的库）"
 fi
 
+# ---------- 7.1 填充历史菜谱 meta 字段 ----------
+info "填充已有菜谱 meta 字段（cooking_time / difficulty / tags，幂等）"
+php artisan db:seed FillRecipeMetaFieldsSeeder --force || warn "seed 失败，可手动执行: php artisan db:seed FillRecipeMetaFieldsSeeder"
+
 # ---------- 8. 生产优化 ----------
 info "生产优化 (config/route/event 缓存)"
 php artisan config:cache

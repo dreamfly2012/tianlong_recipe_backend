@@ -68,6 +68,24 @@ class CosService
     }
 
     /**
+     * 判断对象是否已存在（只读，用于批量同步时跳过已上传的文件）。
+     */
+    public function exists(string $key): bool
+    {
+        return $this->disk->exists(ltrim($key, '/'));
+    }
+
+    /**
+     * 列出指定目录下的文件（只读）。
+     *
+     * @return array<int, string>
+     */
+    public function files(string $directory = ''): array
+    {
+        return $this->disk->files($directory);
+    }
+
+    /**
      * 返回对象访问 URL：
      *  - 配置了 CDN 时返回 CDN URL（与模型 getImageSrcAttribute 契约一致）
      *  - 否则返回本地 /images/... URL（开发 / 本地回退）

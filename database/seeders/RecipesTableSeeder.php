@@ -74,10 +74,16 @@ class RecipesTableSeeder extends Seeder
             }
 
             // 进度报告
-            $elapsed = time() - $startTime;
+            $elapsed = max(1, time() - $startTime);
             $rate = $processed / $elapsed;
-            $eta = floor(($total - $processed) / $rate);
-            $this->command->info("进度：{$processed}/{$total} ({$rate:.1f}/s, ETA: {$eta}s)");
+            $eta = $rate > 0 ? (int) floor(($total - $processed) / $rate) : 0;
+            $this->command->info(sprintf(
+                '进度：%d/%d (%.1f 条/秒, 预计剩余 %d 秒)',
+                $processed,
+                $total,
+                $rate,
+                $eta
+            ));
         }
 
         $this->command->info("导入完成！共 {$processed} 条菜谱。");

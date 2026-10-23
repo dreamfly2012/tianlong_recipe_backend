@@ -11,6 +11,7 @@ cd "$APP_DIR"
 
 RED='\033[0;31m'; GRN='\033[0;32m'; YEL='\033[1;33m'; NC='\033[0m'
 info() { echo -e "${GRN}==>${NC} $1"; }
+ok()   { echo -e "${GRN}  [OK]${NC} $1"; }
 warn() { echo -e "${YEL}[!]${NC} $1"; }
 err()  { echo -e "${RED}[x]${NC} $1"; }
 
@@ -149,6 +150,65 @@ fi
 # ---------- 7.1 填充历史菜谱 meta 字段 ----------
 info "填充已有菜谱 meta 字段（cooking_time / difficulty / tags，幂等）"
 php artisan db:seed FillRecipeMetaFieldsSeeder --force || warn "seed 失败，可手动执行: php artisan db:seed FillRecipeMetaFieldsSeeder"
+
+# ---------- 7.2 菜谱数据导入 ----------
+if [ -f import/recipes_full.json ]; then
+  COUNT=$(php -r '
+    $j = json_decode(file_get_contents("import/recipes_full.json"), true);
+    echo is_array($j) ? count($j) : 0;
+  ' 2>/dev/null || echo 0)
+  DB_COUNT=$(php artisan tinker --execute='echo DB::table("recipes")->count();' 2>/dev/null | tr -d '[:space:]')
+  DB_COUNT=${DB_COUNT:-?}
+  echo ""
+  info "import/recipes_full.json 含 ${COUNT} 条菜谱，线上现有 ${DB_COUNT} 条"
+  echo ""
+  echo "  请选择导入方式："
+  echo "    1) 增量导入 —— 保留线上现有数据，只补充没有的菜谱（推荐）"
+  echo "    2) 全量重建 —— 清空 recipes / recipe_ingredients / recipe_directions 后重建"
+  echo "    3) 跳过     —— 不动数据"
+  echo ""
+  read -rp "  请选择 [1/2/3，默认 1]: " ANS2
+  case "${ANS2:-1}" in
+    2)
+      warn "全量重建会清空三张表，线上用户投稿（user_id != 1）会一并丢失"
+      read -rp "  确认清空重建? 输入 YES 大写继续: " ANS3
+      if [ "$ANS3" = "YES" ]; then
+        info "全量重建菜谱数据"
+        php artisan db:seed --class="Database\\Seeders\\RecipesTableSeeder" --force
+      else
+        warn "已取消，改为跳过"
+      fi
+      ;;
+    3)
+      warn "已跳过菜谱数据导入"
+      ;;
+    *)
+      info "增量导入菜谱数据（已存在的自动跳过）"
+      php artisan db:seed --class="Database\\Seeders\\RecipesIncrementalSeeder" --force
+      ;;
+  esac
+else
+  warn "未找到 import/recipes_full.json，跳过菜谱数据导入"
+fi
+
+# ---------- 7.3 图片目录检查 ----------
+if [ -d public/images ]; then
+  IMG_COUNT=$(find public/images -type f \( -name '*.jpg' -o -name '*.jpeg' -o -name '*.png' \) 2>/dev/null | wc -l)
+  info "public/images 共 ${IMG_COUNT} 张图"
+  # 数据里引用了本地图，但文件缺失会导致前端 404，这里给出提示
+  if [ -f import/recipes_full.json ]; then
+    php -r '
+      $j = json_decode(file_get_contents("import/recipes_full.json"), true);
+      if (!is_array($j)) exit;
+      $miss = 0;
+      foreach ($j as $r) {
+        $img = $r["image"] ?? "";
+        if ($img && !is_file("public/images/" . $img)) $miss++;
+      }
+      if ($miss > 0) fwrite(STDERR, "  [!] 有 {$miss} 条菜谱的图片文件缺失\n");
+    ' 2>&1 || true
+  fi
+fi
 
 # ---------- 8. 生产优化 ----------
 info "生产优化 (config/route/event 缓存)"

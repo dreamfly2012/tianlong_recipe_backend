@@ -54,10 +54,13 @@ class RecipeApiTest extends TestCase
         ]);
 
         $this->recipe = $this->admin->recipes()->create([
-            'name' => '番茄炒蛋',
-            'description' => '一道经典的中式家常菜',
-            'image' => 'test_image.jpg',
-            'category_id' => $this->category->id,
+            'name'         => '番茄炒蛋',
+            'description'  => '一道经典的中式家常菜',
+            'image'        => 'test_image.jpg',
+            'category_id'  => $this->category->id,
+            'cooking_time' => 15,
+            'difficulty'   => '简单',
+            'tags'         => '家常,快手',
         ]);
 
         RecipeIngredient::create([
@@ -81,7 +84,10 @@ class RecipeApiTest extends TestCase
         $response
             ->assertStatus(200)
             ->assertJsonPath('code', 0)
-            ->assertJsonPath('data.data.0.name', '番茄炒蛋');
+            ->assertJsonPath('data.data.0.name', '番茄炒蛋')
+            ->assertJsonPath('data.data.0.cooking_time', 15)
+            ->assertJsonPath('data.data.0.difficulty', '简单')
+            ->assertJsonPath('data.data.0.tags', '家常,快手');
     }
 
     public function test_recipes_list_is_filtered_by_category(): void
@@ -93,10 +99,13 @@ class RecipeApiTest extends TestCase
         ]);
 
         $this->admin->recipes()->create([
-            'name' => '白切鸡',
-            'description' => '粤菜经典',
-            'image' => 'chicken.jpg',
-            'category_id' => $other->id,
+            'name'         => '白切鸡',
+            'description'  => '粤菜经典',
+            'image'        => 'chicken.jpg',
+            'category_id'  => $other->id,
+            'cooking_time' => 30,
+            'difficulty'   => '中等',
+            'tags'         => null,
         ]);
 
         $response = $this->getJson('/api/recipe.lists?id='.$this->category->id);

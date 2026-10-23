@@ -30,4 +30,11 @@ Route::post('register', [AuthController::class, 'register']);
 // 微信小程序登录路由
 Route::post('wechat/login', [AuthController::class, 'wechatLogin']);
 
+// 用户头像上传（multipart，文件字段名支持 file / avatar）
+Route::post('upload/avatar', [AuthController::class, 'uploadAvatar']);
+
+// 用户资料（小程序「我的」页）
+Route::get('account/info', [AuthController::class, 'accountInfo']);
+Route::put('account/info', [AuthController::class, 'updateAccountInfo']);
+
 Route::resource('recipes', RecipeController::class);

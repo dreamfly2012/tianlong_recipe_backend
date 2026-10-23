@@ -82,7 +82,22 @@ class RecipeController extends Controller
                 $query->where('category_id', $categoryId);
             }
 
-            return $query->orderByDesc('id')->paginate()->toArray();
+            return $query->orderByDesc('id')->paginate()->through(function ($recipe) {
+                return [
+                    'id'           => $recipe->id,
+                    'name'         => $recipe->name,
+                    'description'  => $recipe->description,
+                    'image'        => $recipe->image,
+                    'image_src'    => $recipe->image_src,
+                    'category_id'  => $recipe->category_id,
+                    'user_id'      => $recipe->user_id,
+                    'cooking_time' => $recipe->cooking_time,
+                    'difficulty'   => $recipe->difficulty,
+                    'tags'         => $recipe->tags,
+                    'created_at'   => $recipe->created_at,
+                    'updated_at'   => $recipe->updated_at,
+                ];
+            })->toArray();
         });
 
         return ApiResponse::success($data, '获取食谱列表成功');

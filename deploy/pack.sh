@@ -7,12 +7,23 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-OUT_DIR="${1:-$ROOT/release}"
+cd "$ROOT"
+
+# 输出目录一律先切到项目根再解析，相对路径参数（如 release）始终以仓库根为基准；
+# 反斜杠写法 .\release\ 会被解析成奇怪的目录，导致产物落在别处甚至根目录。
+OUT_DIR="${1:-release}"
+mkdir -p "$OUT_DIR"
+OUT_DIR="$(cd "$OUT_DIR" && pwd)"
+
+if [ "$OUT_DIR" = "$ROOT" ]; then
+  echo "!! 输出目录不能是项目根目录（tar 会把产物打进包里），请用: bash deploy/pack.sh release" >&2
+  exit 1
+fi
+
 STAMP="$(date +%Y%m%d-%H%M%S)"
 PKG="tianlong-recipe-${STAMP}.tar.gz"
 
-mkdir -p "$OUT_DIR"
-cd "$ROOT"
+echo "    输出目录: $OUT_DIR"
 
 # ---------- 1. 清理本地垃圾（仅缓存/日志，不动业务数据） ----------
 echo "==> 清理本地缓存与日志"
@@ -36,6 +47,27 @@ for d in storage/app storage/app/private storage/app/public \
   [ -f "$d/.gitignore" ] || printf '*\n!.gitignore\n' > "$d/.gitignore"
 done
 
+# ---------- 1.2 摘掉 public/storage 符号链接 ----------
+# 它是 php artisan storage:link 建的链接，本机常指向 Docker 路径 /var/www/...，
+# 在 Windows 宿主机上是死链。bsdtar（Windows 自带 tar.exe）遍历时会对死链 stat
+# 失败并报 "Cannot stat: Invalid argument" 中断打包，故先 unlink：rm 不带结尾斜杠
+# 只删链接本身，不会跟进删除链接目标。服务器上由 deploy.sh 的 storage:link 重建。
+if [ -L public/storage ]; then
+  echo "==> 移除 public/storage 符号链接（服务器 storage:link 重建；本地需要时再 php artisan storage:link）"
+  rm -f public/storage
+fi
+
+# ---------- 1.3 选择 tar 实现 ----------
+# GNU tar 能正确处理符号链接；bsdtar 遇死链会中断。优先 GNU tar。
+TAR="tar"
+for candidate in /usr/bin/tar tar; do
+  if command -v "$candidate" >/dev/null 2>&1 \
+    && "$candidate" --version 2>/dev/null | grep -qi 'GNU tar'; then
+    TAR="$candidate"
+    break
+  fi
+done
+
 # ---------- 2. 打包 ----------
 # 排除项说明:
 #   vendor/        -> 服务器 composer install 生成
@@ -55,7 +87,8 @@ done
 #   import/recipes_full.json -> RecipesTableSeeder 数据源
 #   public/build/        -> 已构建的前端产物(服务器无 node 也可直接用)
 echo "==> 打包中 (排除 vendor / node_modules / .git / .workbuddy / .env ...)"
-tar -czf "$OUT_DIR/$PKG" \
+echo "    使用 tar: $TAR"
+"$TAR" -czf "$OUT_DIR/$PKG" \
   --exclude='./vendor' \
   --exclude='./node_modules' \
   --exclude='./.git' \
@@ -80,6 +113,7 @@ tar -czf "$OUT_DIR/$PKG" \
   --exclude='./public/storage' \
   --exclude='./nginx/logs' \
   --exclude='./release' \
+  --exclude='./*.tar.gz' \
   --exclude='./*.DS_Store' \
   .
 
@@ -91,6 +125,7 @@ echo "    文件: $OUT_DIR/$PKG"
 echo "    大小: $SIZE"
 echo ""
 echo "==> 包内顶层目录:"
-tar -tzf "$OUT_DIR/$PKG" | awk -F/ 'NF<=2 && $1!=""' | sort -u | head -40
+# 条目形如 ./app/ (3 段) 与 ./README.md (2 段)，深层文件段数更多，直接被过滤掉。
+"$TAR" -tzf "$OUT_DIR/$PKG" | awk -F/ 'NF<=3 && $1!=""' | sort -u | head -40
 echo ""
 echo "==> 下一步: 上传该文件到服务器, 解压后执行 deploy/deploy.sh"

@@ -564,6 +564,72 @@ class RecipeApiTest extends TestCase
         ]);
     }
 
+    public function test_can_replace_recipe_image_on_update(): void
+    {
+        Sanctum::actingAs($this->admin);
+
+        $oldImage = $this->recipe->image;
+        Storage::disk('images')->put($oldImage, 'fake');
+
+        $this->putJson('/api/recipes/'.$this->recipe->id, [
+            'name' => '换一张图',
+            'description' => '测试',
+            'category_id' => $this->category->id,
+            'image' => UploadedFile::fake()->image('new.jpg'),
+            'ingredients' => [['name' => '鸡蛋', 'qty' => '1个']],
+            'directions' => [['description' => '步骤']],
+        ])->assertStatus(200)->assertJsonPath('code', 0);
+
+        $newImage = $this->recipe->fresh()->image;
+
+        $this->assertNotSame($oldImage, $newImage);
+        $this->assertTrue(Storage::disk('images')->exists($newImage));
+        $this->assertFalse(Storage::disk('images')->exists($oldImage));
+    }
+
+    public function test_update_keeps_image_without_upload_or_removal_flag(): void
+    {
+        Sanctum::actingAs($this->admin);
+
+        Storage::disk('images')->put($this->recipe->image, 'fake');
+
+        $this->putJson('/api/recipes/'.$this->recipe->id, [
+            'name' => '只改名称',
+            'description' => '测试',
+            'category_id' => $this->category->id,
+            'ingredients' => [['name' => '鸡蛋', 'qty' => '1个']],
+            'directions' => [['description' => '步骤']],
+        ])->assertStatus(200);
+
+        $this->assertDatabaseHas('recipes', [
+            'id' => $this->recipe->id,
+            'image' => 'test_image.jpg',
+        ]);
+        $this->assertTrue(Storage::disk('images')->exists('test_image.jpg'));
+    }
+
+    public function test_can_remove_recipe_image_on_update(): void
+    {
+        Sanctum::actingAs($this->admin);
+
+        Storage::disk('images')->put($this->recipe->image, 'fake');
+
+        $this->putJson('/api/recipes/'.$this->recipe->id, [
+            'name' => '删掉图片',
+            'description' => '测试',
+            'category_id' => $this->category->id,
+            'image_removed' => 1,
+            'ingredients' => [['name' => '鸡蛋', 'qty' => '1个']],
+            'directions' => [['description' => '步骤']],
+        ])->assertStatus(200)->assertJsonPath('code', 0);
+
+        $this->assertDatabaseHas('recipes', [
+            'id' => $this->recipe->id,
+            'image' => '',
+        ]);
+        $this->assertFalse(Storage::disk('images')->exists('test_image.jpg'));
+    }
+
     public function test_cannot_update_others_recipe(): void
     {
         Sanctum::actingAs($this->user);

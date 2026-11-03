@@ -1,12 +1,18 @@
 export function toMultipartedForm(form, mode) {
   // 使用对象展开运算符浅拷贝，保留File对象
   const temp = { ...form };
-  
-  // 仅在编辑模式且image是字符串URL时才删除image字段
-  if(mode === 'edit' && typeof form.image === 'string') {
-    delete temp.image;
+
+  if (mode === 'edit') {
+    // 字符串是服务端已有的图片文件名，无需重复上传
+    if (typeof temp.image === 'string') {
+      delete temp.image;
+    } else if (temp.image === null || temp.image === undefined) {
+      // null 表示用户在编辑页删除了图片，FormData 无法表达“清空”，改用显式标记
+      delete temp.image;
+      temp.image_removed = 1;
+    }
   }
-  
+
   return objectToFormData(temp);
 }
 
@@ -20,14 +26,19 @@ function objectToFormData(obj, form, namespace) {
             } else {
                 formKey = property;
             }
-            if(obj[property] instanceof Array) {
-                for (var i = 0; i < obj[property].length; i++) {
-                    objectToFormData(obj[property][i], fd, `${property}[${i}]`);
+            let value = obj[property];
+            // null/undefined 不参与提交，否则 FormData 会把它序列化成 "null" 字符串
+            if(value === null || value === undefined) {
+                continue;
+            }
+            if(value instanceof Array) {
+                for (var i = 0; i < value.length; i++) {
+                    objectToFormData(value[i], fd, `${property}[${i}]`);
                 }
-            } else if(typeof obj[property] === 'object' && !(obj[property] instanceof File)) {
-                objectToFormData(obj[property], fd, property);
+            } else if(typeof value === 'object' && !(value instanceof File)) {
+                objectToFormData(value, fd, property);
             } else {
-                fd.append(formKey, obj[property]);
+                fd.append(formKey, value);
             }
         }
     }

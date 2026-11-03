@@ -435,6 +435,7 @@ class RecipeController extends Controller
             'name' => 'required|max:255',
             'description' => 'required|max:3000',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image_removed' => 'nullable|boolean',
             'ingredients' => 'required|array|min:1',
             'ingredients.*.id' => 'nullable|integer|exists:recipe_ingredients,id',
             'ingredients.*.name' => 'required|max:255',
@@ -459,6 +460,9 @@ class RecipeController extends Controller
             $oldImage = $recipe->image;
             $recipe->image = $this->storeImage($request->file('image'));
             $this->deleteImage($oldImage);
+        } elseif ($request->boolean('image_removed')) {
+            $this->deleteImage($recipe->image);
+            $recipe->image = '';
         }
 
         $recipe->save();
